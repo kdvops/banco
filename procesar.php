@@ -1,189 +1,220 @@
 <?php
 session_start();
+
+header("Content-Type: application/json");
+
 require_once 'db.php';
+require_once 'helpers.php';
 
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode(["status"=>"error","msg"=>"No autorizado"]);
-    exit();
+    echo json_encode(["status" => "error", "msg" => "No autorizado"]);
+    exit;
 }
 
-$user_id = $_SESSION['user_id'];
+$user_id = (int) $_SESSION['user_id'];
 $action = $_POST['action'] ?? '';
 
-/* ================= PERFIL ================= */
+function subirImagen(string $field, string $prefix = ''): ?string
+{
+    if (!isset($_FILES[$field]) || $_FILES[$field]['error'] !== 0) {
+        return null;
+    }
 
-/* ================= PERFIL (Corregido) ================= */
+    $extension = strtolower(pathinfo($_FILES[$field]['name'], PATHINFO_EXTENSION));
+    $baseName = preg_replace('/[^A-Za-z0-9._-]/', '_', basename($_FILES[$field]['name']));
+
+    if ($baseName === '' || $baseName === null) {
+        $baseName = 'archivo';
+    }
+
+    if (!is_dir('uploads')) {
+        mkdir('uploads', 0777, true);
+    }
+
+    $fileName = time() . "_" . $prefix . $baseName;
+    $destination = "uploads/" . $fileName;
+
+    if ($extension === '') {
+        $destination = "uploads/" . time() . "_" . $prefix . pathinfo($baseName, PATHINFO_FILENAME);
+    }
+
+    if (move_uploaded_file($_FILES[$field]['tmp_name'], $destination)) {
+        return $destination;
+    }
+
+    return null;
+}
+
 if ($action === "perfil") {
-    $nombres   = $_POST['nombres'] ?? '';
-    $apellidos = $_POST['apellidos'] ?? '';
-    $cedula    = $_POST['cedula'] ?? '';
-    $numero    = $_POST['numero'] ?? ''; // Coincide con la columna 'numero' en SQL
-    $resena    = $_POST['resena_personal'] ?? '';
+    $nombres = trim($_POST['nombres'] ?? '');
+    $apellidos = trim($_POST['apellidos'] ?? '');
+    $cedula = preg_replace('/\D+/', '', $_POST['cedula'] ?? '') ?? '';
+    $numero = app_normalize_phone($_POST['numero'] ?? '');
+    $resena = trim($_POST['resena_personal'] ?? '');
 
-    // 1. Obtener imagen actual por si no se sube una nueva (La columna se llama 'imagen')
-    $sql_current = "SELECT imagen FROM usuarios WHERE id = ?";
-    $stmt_curr = mysqli_prepare($conn, $sql_current);
-    mysqli_stmt_bind_param($stmt_curr, "i", $user_id);
-    mysqli_stmt_execute($stmt_curr);
-    $res_curr = mysqli_stmt_get_result($stmt_curr);
-    $user_data = mysqli_fetch_assoc($res_curr);
-    $foto_actual = $user_data['imagen'] ?? 'perfil.png';
+    $stmtCurr = mysqli_prepare($conn, "SELECT imagen FROM usuarios WHERE id = ?");
+    mysqli_stmt_bind_param($stmtCurr, "i", $user_id);
+    mysqli_stmt_execute($stmtCurr);
+    $resCurr = mysqli_stmt_get_result($stmtCurr);
+    $userData = mysqli_fetch_assoc($resCurr);
+    $fotoActual = $userData['imagen'] ?? 'perfil.png';
+    mysqli_stmt_close($stmtCurr);
 
-    // 2. Manejo de la subida de archivo
-    if(isset($_FILES['foto']) && $_FILES['foto']['error'] == 0){
-        $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
-        $nombre_archivo = time() . "_" . $user_id . "." . $ext;
-        $ruta_destino = "uploads/" . $nombre_archivo;
-        
-        if (!is_dir('uploads')) mkdir('uploads', 0777, true);
-        
-        if(move_uploaded_file($_FILES['foto']['tmp_name'], $ruta_destino)){
-            $foto_actual = $nombre_archivo;
+    if ($numero !== '') {
+        $stmtPhone = mysqli_prepare($conn, "SELECT id FROM usuarios WHERE numero = ? AND id <> ?");
+        mysqli_stmt_bind_param($stmtPhone, "si", $numero, $user_id);
+        mysqli_stmt_execute($stmtPhone);
+        $resPhone = mysqli_stmt_get_result($stmtPhone);
+
+        if (mysqli_num_rows($resPhone) > 0) {
+            echo json_encode(["status" => "error", "msg" => "Ese numero ya pertenece a otro usuario"]);
+            mysqli_stmt_close($stmtPhone);
+            exit;
         }
+
+        mysqli_stmt_close($stmtPhone);
     }
 
-    // 3. Actualizar la base de datos (Nombres de columnas exactos del SQL)
-    $sql_update = "UPDATE usuarios SET nombres=?, apellidos=?, cedula=?, numero=?, resena_personal=?, imagen=? WHERE id=?";
-    $stmt_upd = mysqli_prepare($conn, $sql_update);
-    
-    // "ssssssi" -> 6 strings y 1 integer
-    mysqli_stmt_bind_param($stmt_upd, "ssssssi", 
-        $nombres, 
-        $apellidos, 
-        $cedula, 
-        $numero, 
-        $resena, 
-        $foto_actual, 
-        $user_id
+    $nuevaFoto = subirImagen('foto', $user_id . "_");
+    if ($nuevaFoto !== null) {
+        $fotoActual = basename($nuevaFoto);
+    }
+
+    $stmtUpd = mysqli_prepare(
+        $conn,
+        "UPDATE usuarios SET nombres = ?, apellidos = ?, cedula = ?, numero = ?, resena_personal = ?, imagen = ? WHERE id = ?"
     );
+    mysqli_stmt_bind_param($stmtUpd, "ssssssi", $nombres, $apellidos, $cedula, $numero, $resena, $fotoActual, $user_id);
 
-    if(mysqli_stmt_execute($stmt_upd)){
-        echo json_encode(["status"=>"ok", "msg"=>"Perfil actualizado correctamente"]);
+    if (mysqli_stmt_execute($stmtUpd)) {
+        echo json_encode(["status" => "ok", "msg" => "Perfil actualizado correctamente"]);
     } else {
-        echo json_encode(["status"=>"error", "msg"=>"Error al actualizar: " . mysqli_error($conn)]);
+        echo json_encode(["status" => "error", "msg" => "Error al actualizar: " . mysqli_stmt_error($stmtUpd)]);
     }
-    mysqli_stmt_close($stmt_upd);
-    exit();
+
+    mysqli_stmt_close($stmtUpd);
+    exit;
 }
 
-// ... Resto de las acciones (servicio, cuenta, crypto, pago) ...
-
-
-/* ================= SERVICIO ================= */
-/* ================= SERVICIO (Corregido) ================= */
 if ($action === "servicio") {
-    $nombre = $_POST['nombre_servicio'];
-    $resena = $_POST['resena'];
-    $link = $_POST['link']; // Este viene del name="link" del HTML
+    $nombre = trim($_POST['nombre_servicio'] ?? '');
+    $resena = trim($_POST['resena'] ?? '');
+    $enlace = trim($_POST['enlace'] ?? '');
+    $imagen = subirImagen('imagen', $user_id . "_");
 
-    $imagen = null;
-    if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0){
-        $ruta = "uploads/" . time() . "_" . $_FILES['imagen']['name'];
-        if (!is_dir('uploads')) mkdir('uploads', 0777, true); // Asegura que la carpeta existe
-        move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta);
-        $imagen = $ruta;
-    }
+    $stmt = mysqli_prepare(
+        $conn,
+        "INSERT INTO servicios (usuario_id, nombre_servicio, resena, enlace, imagen) VALUES (?, ?, ?, ?, ?)"
+    );
+    mysqli_stmt_bind_param($stmt, "issss", $user_id, $nombre, $resena, $enlace, $imagen);
 
-    // CAMBIO AQUÍ: Se cambió 'link' por 'enlace'
-    $sql = "INSERT INTO servicios (usuario_id, nombre_servicio, resena, enlace, imagen) VALUES (?,?,?,?,?)";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "issss", $user_id, $nombre, $resena, $link, $imagen);
-    
     if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(["status"=>"ok","tipo"=>"servicio"]);
+        echo json_encode(["status" => "ok", "tipo" => "servicio"]);
     } else {
-        echo json_encode(["status"=>"error","msg"=>mysqli_error($conn)]);
+        echo json_encode(["status" => "error", "msg" => mysqli_stmt_error($stmt)]);
     }
+
+    mysqli_stmt_close($stmt);
+    exit;
 }
 
-/* ================= CUENTA ================= */
 if ($action === "cuenta") {
-    $banco = $_POST['banco'];
-    $tipo = $_POST['tipo'];
-    $numero = $_POST['numero'];
-    // Imagen por defecto o lógica para subir imagen de banco
-    $img_default = strtolower($banco) . ".png"; 
-
-    $sql = "INSERT INTO cuentas_bancarias (usuario_id, banco, tipo_cuenta, numero_cuenta, imagen) VALUES (?,?,?,?,?)";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "issss", $user_id, $banco, $tipo, $numero, $img_default);
-    mysqli_stmt_execute($stmt);
-
-    echo json_encode(["status"=>"ok","tipo"=>"cuenta"]);
-}
-
-/* ================= CRYPTO ================= */
-if ($action === "crypto") {
-
-    $moneda = $_POST['moneda'];
-    $red = $_POST['red'];
-    $direccion = $_POST['direccion'];
-
-    // Imagen automática según moneda
-    $img_default2 = strtolower($moneda) . ".png";
-
-    $sql = "INSERT INTO cripto_wallets (usuario_id, moneda, red, direccion, imagen) VALUES (?,?,?,?,?)";
-    $stmt = mysqli_prepare($conn, $sql);
-
-    mysqli_stmt_bind_param($stmt, "issss", $user_id, $moneda, $red, $direccion, $img_default2);
-
-    mysqli_stmt_execute($stmt);
-
-    echo json_encode(["status"=>"ok","tipo"=>"crypto"]);
-}
-
-/* ================= PAGOS ================= */
-/* ================= PAGOS (Corregido) ================= */
-if ($action === "pago") {
-    $plataforma = $_POST['plataforma'];
-    $link = $_POST['link']; // Viene del name="link" en el HTML
-
-    // Se cambia la columna 'link' por 'enlace' que es la que existe en SQL
-    $sql = "INSERT INTO pagos_online (usuario_id, plataforma, enlace) VALUES (?,?,?)";
-    $stmt = mysqli_prepare($conn, $sql);
-    
-    // Cambiamos la cadena de tipos a "iss" (integer, string, string)
-    mysqli_stmt_bind_param($stmt, "iss", $user_id, $plataforma, $link);
-    
-    if(mysqli_stmt_execute($stmt)) {
-        echo json_encode(["status"=>"ok","tipo"=>"pago"]);
-    } else {
-        echo json_encode(["status"=>"error","msg"=>mysqli_error($conn)]);
-    }
-}
-
-
-
-
-
-/* ================= ELIMINAR ELEMENTO ================= */
-if ($action === "eliminar") {
-    $id_elemento = $_POST['id'] ?? 0;
+    $banco = $_POST['banco'] ?? '';
     $tipo = $_POST['tipo'] ?? '';
-    
-    // Definir la tabla según el tipo enviado
-    $tabla = "";
-    switch ($tipo) {
-        case 'cuenta': $tabla = "cuentas_bancarias"; break;
-        case 'crypto': $tabla = "cripto_wallets"; break;
-        case 'pago':   $tabla = "pagos_online"; break;
-        case 'servicio': $tabla = "servicios"; break;
+    $numero = trim($_POST['numero'] ?? '');
+    $imagenesBanco = [
+        'BHD' => 'bhd.jpg',
+        'Ademi' => 'images.png',
+        'Ban Reservas' => 'images.png',
+        'Santa Cruz' => 'images.png',
+    ];
+    $imagen = $imagenesBanco[$banco] ?? 'images.png';
+
+    $stmt = mysqli_prepare(
+        $conn,
+        "INSERT INTO cuentas_bancarias (usuario_id, banco, tipo_cuenta, numero_cuenta, imagen) VALUES (?, ?, ?, ?, ?)"
+    );
+    mysqli_stmt_bind_param($stmt, "issss", $user_id, $banco, $tipo, $numero, $imagen);
+
+    if (mysqli_stmt_execute($stmt)) {
+        echo json_encode(["status" => "ok", "tipo" => "cuenta"]);
+    } else {
+        echo json_encode(["status" => "error", "msg" => mysqli_stmt_error($stmt)]);
     }
 
-    if (!empty($tabla)) {
-        // Validamos que el elemento pertenezca al usuario de la sesión por seguridad
-        $sql = "DELETE FROM $tabla WHERE id = ? AND usuario_id = ?";
-        $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "ii", $id_elemento, $user_id);
-        
-        if (mysqli_stmt_execute($stmt)) {
-            echo json_encode(["status" => "ok"]);
-        } else {
-            echo json_encode(["status" => "error", "msg" => mysqli_error($conn)]);
-        }
-        mysqli_stmt_close($stmt);
-    } else {
-        echo json_encode(["status" => "error", "msg" => "Tipo no válido"]);
-    }
-    exit();
+    mysqli_stmt_close($stmt);
+    exit;
 }
+
+if ($action === "crypto") {
+    $moneda = $_POST['moneda'] ?? '';
+    $red = $_POST['red'] ?? '';
+    $direccion = trim($_POST['direccion'] ?? '');
+    $imagen = 'images.png';
+
+    $stmt = mysqli_prepare(
+        $conn,
+        "INSERT INTO cripto_wallets (usuario_id, moneda, red, direccion, imagen) VALUES (?, ?, ?, ?, ?)"
+    );
+    mysqli_stmt_bind_param($stmt, "issss", $user_id, $moneda, $red, $direccion, $imagen);
+
+    if (mysqli_stmt_execute($stmt)) {
+        echo json_encode(["status" => "ok", "tipo" => "crypto"]);
+    } else {
+        echo json_encode(["status" => "error", "msg" => mysqli_stmt_error($stmt)]);
+    }
+
+    mysqli_stmt_close($stmt);
+    exit;
+}
+
+if ($action === "pago") {
+    $plataforma = $_POST['plataforma'] ?? '';
+    $enlace = trim($_POST['enlace'] ?? '');
+
+    $stmt = mysqli_prepare(
+        $conn,
+        "INSERT INTO pagos_online (usuario_id, plataforma, enlace) VALUES (?, ?, ?)"
+    );
+    mysqli_stmt_bind_param($stmt, "iss", $user_id, $plataforma, $enlace);
+
+    if (mysqli_stmt_execute($stmt)) {
+        echo json_encode(["status" => "ok", "tipo" => "pago"]);
+    } else {
+        echo json_encode(["status" => "error", "msg" => mysqli_stmt_error($stmt)]);
+    }
+
+    mysqli_stmt_close($stmt);
+    exit;
+}
+
+if ($action === "eliminar") {
+    $idElemento = (int) ($_POST['id'] ?? 0);
+    $tipo = $_POST['tipo'] ?? '';
+    $mapa = [
+        'cuenta' => 'cuentas_bancarias',
+        'crypto' => 'cripto_wallets',
+        'pago' => 'pagos_online',
+        'servicio' => 'servicios',
+    ];
+
+    if (!isset($mapa[$tipo])) {
+        echo json_encode(["status" => "error", "msg" => "Tipo no valido"]);
+        exit;
+    }
+
+    $tabla = $mapa[$tipo];
+    $stmt = mysqli_prepare($conn, "DELETE FROM {$tabla} WHERE id = ? AND usuario_id = ?");
+    mysqli_stmt_bind_param($stmt, "ii", $idElemento, $user_id);
+
+    if (mysqli_stmt_execute($stmt)) {
+        echo json_encode(["status" => "ok"]);
+    } else {
+        echo json_encode(["status" => "error", "msg" => mysqli_stmt_error($stmt)]);
+    }
+
+    mysqli_stmt_close($stmt);
+    exit;
+}
+
+echo json_encode(["status" => "error", "msg" => "Accion no valida"]);
