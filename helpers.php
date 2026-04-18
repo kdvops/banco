@@ -1,5 +1,15 @@
 <?php
 
+function app_e(?string $value): string
+{
+    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+}
+
+function app_bool_to_attr(bool $value): string
+{
+    return $value ? 'true' : 'false';
+}
+
 function app_env(string $key, string $default): string
 {
     $value = getenv($key);

@@ -1,0 +1,41 @@
+:root {
+  --footer-bg: #10233c;
+  --footer-text: rgba(255, 255, 255, 0.82);
+}
+
+body {
+  margin: 0;
+}
+
+.site-footer {
+  margin-top: 28px;
+  background: linear-gradient(135deg, #10233c 0%, #183554 100%);
+  color: var(--footer-text);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.site-footer__inner {
+  width: min(1080px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 34px;
+  text-align: center;
+}
+
+.site-footer__title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.site-footer__text,
+.site-footer__meta {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.site-footer__meta {
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.8;
+}

@@ -1,0 +1,217 @@
+<?php
+
+function app_render_profile_header(array $user, array $services, array $options = []): void
+{
+    $editable = (bool) ($options['editable'] ?? false);
+    $shareTitle = $options['share_title'] ?? ('Perfil de ' . ($user['nombres'] ?? 'usuario'));
+    $profileImage = app_asset_url($user['imagen'] ?? 'perfil.png', ['uploads', 'imagen'], 'uploads/perfil.png');
+
+    echo '<header class="header">';
+
+    if ($editable) {
+        echo '<button type="button" class="btn-ajustes-fijo js-settings-open" aria-label="Abrir configuracion">';
+        echo '<i class="fas fa-cog"></i>';
+        echo '</button>';
+    }
+
+    echo '<button type="button" class="share-page js-share-page" title="Compartir" data-share-title="' . app_e($shareTitle) . '">';
+    echo '<i class="fa-solid fa-share-nodes"></i>';
+    echo '</button>';
+
+    echo '<div class="profile-header"><div class="profile-wrapper">';
+    echo '<img src="' . app_e($profileImage) . '" class="profile-main js-open-profile-modal" alt="' . app_e($user['nombres'] ?? 'Perfil') . '">';
+
+    if ($editable) {
+        echo '<button type="button" class="edit-btn js-open-modal" data-modal-target="perfil" aria-label="Editar perfil">';
+        echo '<i class="fa-solid fa-pen"></i>';
+        echo '</button>';
+    }
+
+    echo '</div></div>';
+
+    echo '<p><strong>' . app_e($user['nombres'] ?? '') . '</strong></p>';
+    echo '<p style="color:#666;">Cedula: ' . app_e($user['cedula'] ?? '') . '</p>';
+
+    echo '<div class="mini-profiles-scroll">';
+
+    foreach ($services as $servicio) {
+        $serviceImage = app_asset_url($servicio['imagen'] ?? '', ['uploads', 'imagen'], 'imagen/perfil.png');
+
+        echo '<button type="button" class="mini-profile js-mini-profile"';
+        echo ' data-service-id="' . (int) $servicio['id'] . '"';
+        echo ' data-service-img="' . app_e($serviceImage) . '"';
+        echo ' data-service-title="' . app_e($servicio['nombre_servicio'] ?? '') . '"';
+        echo ' data-service-text="' . app_e($servicio['resena'] ?? '') . '"';
+        echo ' data-service-link="' . app_e($servicio['enlace'] ?? '') . '"';
+        echo '>';
+        echo '<img src="' . app_e($serviceImage) . '" alt="' . app_e($servicio['nombre_servicio'] ?? 'Servicio') . '">';
+        echo '<span>' . app_e($servicio['nombre_servicio'] ?? '') . '</span>';
+        echo '</button>';
+    }
+
+    if ($editable) {
+        echo '<div class="mini-profile">';
+        echo '<button type="button" class="add-circle js-open-modal" data-modal-target="servicio">+</button>';
+        echo '<span>Agregar</span>';
+        echo '</div>';
+    }
+
+    echo '</div>';
+    echo '</header>';
+}
+
+function app_render_profile_tabs(): void
+{
+    echo <<<HTML
+<nav class="tab-buttons">
+  <button type="button" class="tablink active js-tab-trigger" data-tab-target="Cuentas">Cuentas</button>
+  <button type="button" class="tablink js-tab-trigger" data-tab-target="Criptos">Criptos</button>
+  <button type="button" class="tablink js-tab-trigger" data-tab-target="Pagos">Online</button>
+</nav>
+HTML;
+}
+
+function app_render_accounts_section(array $accounts, bool $editable = false): void
+{
+    echo '<main id="Cuentas" class="tabcontent" style="display:block;"><div class="cards">';
+
+    foreach ($accounts as $account) {
+        $image = app_asset_url($account['imagen'] ?? '', ['imagen', 'uploads'], 'imagen/images.png');
+
+        echo '<div class="card"><div class="card-top">';
+        echo '<img src="' . app_e($image) . '" alt="' . app_e($account['banco'] ?? 'Banco') . '">';
+        echo '<div class="card-content">';
+        echo '<h3>' . app_e($account['banco'] ?? '') . '</h3>';
+        echo '<div class="copy-row">';
+        echo app_e($account['tipo_cuenta'] ?? '') . ' - ';
+        echo '<span class="copy-text">' . app_e($account['numero_cuenta'] ?? '') . '</span>';
+        echo '<button type="button" class="copy-btn js-copy-btn" aria-label="Copiar cuenta"><i class="fa-regular fa-copy"></i></button>';
+        echo '</div></div>';
+
+        if ($editable) {
+            echo '<div class="card-menu">';
+            echo '<button type="button" class="card-menu__trigger js-card-menu" aria-label="Opciones"><i class="fa-solid fa-ellipsis-vertical"></i></button>';
+            echo '<div class="menu-dropdown">';
+            echo '<button type="button" class="danger js-delete-trigger" data-delete-id="' . (int) $account['id'] . '" data-delete-type="cuenta"><i class="fa-solid fa-trash"></i> Eliminar</button>';
+            echo '</div></div>';
+        }
+
+        echo '</div></div>';
+    }
+
+    if (!$accounts) {
+        echo '<p>' . ($editable ? 'No tienes cuentas registradas' : 'Este usuario no tiene cuenta registrada') . '</p>';
+    }
+
+    if ($editable) {
+        echo '<button type="button" class="card-add js-open-modal" data-modal-target="cuenta"><i class="fa-solid fa-building-columns"></i> Agregar Cuenta</button>';
+    }
+
+    echo '</div></main>';
+}
+
+function app_render_crypto_section(array $cryptos, bool $editable = false): void
+{
+    echo '<main id="Criptos" class="tabcontent"><div class="cards">';
+
+    foreach ($cryptos as $crypto) {
+        $image = app_asset_url($crypto['imagen'] ?? '', ['imagen', 'uploads'], 'imagen/images.png');
+
+        echo '<div class="card"><div class="card-top">';
+        echo '<img src="' . app_e($image) . '" alt="' . app_e($crypto['moneda'] ?? 'Cripto') . '">';
+        echo '<div class="card-content"><h3>' . app_e($crypto['moneda'] ?? '') . ' (Red ' . app_e($crypto['red'] ?? '') . ')</h3></div>';
+        echo '<button type="button" class="toggle-btn js-toggle-gate" aria-label="Mostrar direccion"><i class="fa-regular fa-eye"></i></button>';
+
+        if ($editable) {
+            echo '<div class="card-menu">';
+            echo '<button type="button" class="card-menu__trigger js-card-menu" aria-label="Opciones"><i class="fa-solid fa-ellipsis-vertical"></i></button>';
+            echo '<div class="menu-dropdown">';
+            echo '<button type="button" class="danger js-delete-trigger" data-delete-id="' . (int) $crypto['id'] . '" data-delete-type="crypto"><i class="fa-solid fa-trash"></i> Eliminar</button>';
+            echo '</div></div>';
+        }
+
+        echo '</div>';
+        echo '<div class="gate"><div class="gate-inner"><div class="copy-row">';
+        echo '<span class="copy-text">' . app_e($crypto['direccion'] ?? '') . '</span>';
+        echo '<button type="button" class="copy-btn js-copy-btn" aria-label="Copiar wallet"><i class="fa-regular fa-copy"></i></button>';
+        echo '</div></div></div></div>';
+    }
+
+    if (!$cryptos) {
+        echo '<p>' . ($editable ? 'No tienes wallets registradas' : 'Este usuario no tiene cuenta registrada') . '</p>';
+    }
+
+    if ($editable) {
+        echo '<button type="button" class="card-add js-open-modal" data-modal-target="cartera"><i class="fa-brands fa-bitcoin"></i> Agregar Cartera</button>';
+    }
+
+    echo '</div></main>';
+}
+
+function app_render_payments_section(array $payments, bool $editable = false): void
+{
+    echo '<main id="Pagos" class="tabcontent"><div class="payment-container">';
+
+    foreach ($payments as $payment) {
+        $buttonClass = strtolower(str_replace(' ', '', (string) ($payment['plataforma'] ?? '')));
+
+        echo '<button type="button" class="pay-btn ' . app_e($buttonClass) . ' js-open-link" data-external-link="' . app_e($payment['enlace'] ?? '') . '">';
+        echo app_e($payment['plataforma'] ?? '');
+        echo '</button>';
+    }
+
+    if (!$payments) {
+        echo '<p>' . ($editable ? 'No tienes metodos de pago registrados' : 'Este usuario no tiene cuenta registrada') . '</p>';
+    }
+
+    if ($editable) {
+        echo '<button type="button" class="card-add js-open-modal" data-modal-target="online"><i class="fa-brands fa-wallet"></i> Agregar Cartera online</button>';
+    }
+
+    echo '</div></main>';
+}
+
+function app_render_profile_modal(array $user): void
+{
+    $profileImage = app_e(app_asset_url($user['imagen'] ?? 'perfil.png', ['uploads', 'imagen'], 'uploads/perfil.png'));
+    $fullName = app_e(trim(($user['nombres'] ?? '') . ' ' . ($user['apellidos'] ?? '')));
+    $description = app_e($user['resena_personal'] ?? 'Sin descripcion personal.');
+
+    echo <<<HTML
+<div id="profileModal" class="modal">
+  <div class="modal-content">
+    <button type="button" class="close js-close-modal" data-modal-target="profileModal">&times;</button>
+    <img src="{$profileImage}" width="100" style="border-radius:50%; object-fit:cover; aspect-ratio:1/1;" alt="{$fullName}">
+    <h3>{$fullName}</h3>
+    <p style="color:#666;">{$description}</p>
+  </div>
+</div>
+HTML;
+}
+
+function app_render_mini_profile_modal(bool $editable = false): void
+{
+    $editableAttr = app_bool_to_attr($editable);
+    $modalClass = $editable ? 'modal-content modal-perfil-ajustado' : 'modal-content';
+
+    echo '<div id="modal" class="modal" data-editable="' . $editableAttr . '">';
+    echo '<div class="' . $modalClass . '">';
+
+    if ($editable) {
+        echo '<div class="card-menu menu-extremo-izquierdo">';
+        echo '<button type="button" class="card-menu__trigger js-card-menu" aria-label="Opciones"><i class="fa-solid fa-ellipsis-vertical"></i></button>';
+        echo '<div class="menu-dropdown">';
+        echo '<button type="button" class="danger" id="btnEliminarServicio"><i class="fa-solid fa-trash"></i> Eliminar</button>';
+        echo '</div></div>';
+        echo '<button type="button" class="close btn-cerrar-extremo js-close-modal" data-modal-target="modal">&times;</button>';
+        echo '<img id="modalImg" class="img-modal-perfil" alt="Servicio">';
+    } else {
+        echo '<button type="button" class="close js-close-modal" data-modal-target="modal">&times;</button>';
+        echo '<img id="modalImg" width="80" style="border-radius:50%;" alt="Servicio">';
+    }
+
+    echo '<h3 id="modalTitle"></h3>';
+    echo '<p id="modalText"></p>';
+    echo '<div id="modalLinkContainer"><a id="modalLink" target="_blank" class="btn-primary">Visitar</a></div>';
+    echo '</div></div>';
+}

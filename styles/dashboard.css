@@ -1,0 +1,140 @@
+.app-page .btn-ajustes-fijo,
+.app-page .share-page,
+.app-page .mini-profile,
+.app-page .add-circle,
+.app-page .card-add,
+.app-page .card-menu__trigger,
+.app-page .search-float-btn,
+.app-page .js-open-link {
+  border: none;
+  font: inherit;
+}
+
+.app-page .btn-ajustes-fijo,
+.app-page .share-page,
+.app-page .mini-profile,
+.app-page .card-add,
+.app-page .search-float-btn,
+.app-page .card-menu__trigger {
+  background: transparent;
+}
+
+.app-page .btn-ajustes-fijo {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #444;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9999;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.app-page .share-page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-page .mini-profile {
+  padding: 0;
+}
+
+.app-page .card-menu__trigger {
+  padding: 0;
+  cursor: pointer;
+}
+
+.app-page .settings-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-page .settings-box {
+  width: 90%;
+  max-width: 340px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.app-page .settings-header {
+  padding: 15px;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+}
+
+.app-page .cerrar-x {
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.app-page .settings-body {
+  padding: 15px;
+}
+
+.app-page .settings-link {
+  display: block;
+  text-align: center;
+  color: #d9534f;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.app-page .modal-perfil-ajustado {
+  position: relative !important;
+  padding-top: 65px !important;
+  text-align: center;
+  overflow: visible !important;
+}
+
+.app-page .menu-extremo-izquierdo {
+  position: absolute !important;
+  top: 15px !important;
+  left: 15px !important;
+  z-index: 10;
+}
+
+.app-page .btn-cerrar-extremo {
+  position: absolute !important;
+  top: 10px !important;
+  right: 15px !important;
+  font-size: 30px !important;
+  cursor: pointer !important;
+  z-index: 10;
+}
+
+.app-page .img-modal-perfil {
+  width: 90px !important;
+  height: 90px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  display: block;
+  margin: 0 auto 15px;
+  border: 3px solid #eee;
+}
+
+.app-page .alert-error {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(217, 83, 79, 0.12);
+  color: #b13a34;
+}
