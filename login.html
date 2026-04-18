@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acceso | Juan M Alcalá</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+:root{
+  --primary:#2b7cff;
+  --bg:#f4f6f9;
+  --box:#ffffff;
+  --text:#222;
+}
+
+*{
+box-sizing:border-box;
+font-family:'Segoe UI',Arial;
+}
+
+body{
+margin:0;
+background:var(--bg);
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.auth-container{
+width:100%;
+max-width:380px;
+background:var(--box);
+border-radius:14px;
+box-shadow:0 20px 40px rgba(0,0,0,.1);
+padding:25px;
+}
+
+.logo{
+text-align:center;
+margin-bottom:15px;
+}
+
+.logo img{
+width:80px;
+border-radius:50%;
+}
+
+.logo h2{
+margin:10px 0 0;
+font-size:20px;
+}
+
+.tabs{
+display:flex;
+gap:10px;
+margin:20px 0;
+}
+
+.tabs button{
+flex:1;
+padding:10px;
+border:none;
+background:#eaeaea;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+}
+
+.tabs button.active{
+background:var(--primary);
+color:white;
+}
+
+.form{
+display:none;
+flex-direction:column;
+gap:12px;
+}
+
+.form.active{
+display:flex;
+}
+
+.form input{
+padding:12px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+.submit{
+background:var(--primary);
+color:white;
+border:none;
+padding:12px;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+}
+
+.note{
+text-align:center;
+font-size:13px;
+color:#666;
+margin-top:10px;
+}
+
+.fingerprint{
+display:flex;
+justify-content:center;
+margin-top:20px;
+}
+
+.fingerprint i{
+font-size:38px;
+color:var(--primary);
+opacity:.75;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="auth-container">
+
+<div class="logo">
+<img src="imagen/alcala.png" alt="Juan Alcalá">
+<h2>Juan M Alcalá</h2>
+</div>
+
+<div class="tabs">
+<button id="btnLogin" class="active">Entrar</button>
+<button id="btnRegister">Crear cuenta</button>
+</div>
+
+<!-- LOGIN -->
+<form id="loginForm" class="form active">
+
+<input type="email" id="loginEmail" placeholder="Correo electrónico" required>
+
+<input type="password" id="loginPassword" placeholder="Contraseña" required>
+
+<button class="submit">Iniciar sesión</button>
+
+</form>
+
+<!-- REGISTER -->
+<form id="registerForm" class="form">
+
+<input type="text" id="regNombres" placeholder="Nombres" required>
+
+<input type="text" id="regApellidos" placeholder="Apellidos" required>
+
+<input type="email" id="regEmail" placeholder="Correo electrónico" required>
+
+<input type="number" id="regNumero" placeholder="Número Celular" required>
+
+<input type="password" id="regPassword" placeholder="Contraseña" required>
+
+<button class="submit">Registrarme</button>
+
+</form>
+
+<div class="note">
+Acceso seguro • Plataforma financiera personal
+</div>
+
+<div class="fingerprint">
+<i class="fa-solid fa-fingerprint"></i>
+</div>
+
+</div>
+
+<script>
+
+const loginForm = document.getElementById("loginForm");
+const registerForm = document.getElementById("registerForm");
+
+const btnLogin = document.getElementById("btnLogin");
+const btnRegister = document.getElementById("btnRegister");
+
+btnLogin.onclick = () => switchTab("login");
+btnRegister.onclick = () => switchTab("register");
+
+function switchTab(tab){
+
+loginForm.classList.remove("active");
+registerForm.classList.remove("active");
+
+btnLogin.classList.remove("active");
+btnRegister.classList.remove("active");
+
+if(tab === "login"){
+
+loginForm.classList.add("active");
+btnLogin.classList.add("active");
+
+}else{
+
+registerForm.classList.add("active");
+btnRegister.classList.add("active");
+
+}
+
+}
+
+/* LOGIN */
+
+loginForm.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+fetch('auth.php',{
+method:'POST',
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+action:"login",
+email:document.getElementById("loginEmail").value,
+password:document.getElementById("loginPassword").value
+})
+})
+
+.then(res=>res.json())
+
+.then(data=>{
+
+if(data.success){
+
+window.location.href="index.php";
+
+}else{
+
+alert(data.msg || "Credenciales incorrectas");
+
+}
+
+});
+
+});
+
+
+/* REGISTER */
+
+registerForm.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+fetch('auth.php',{
+method:'POST',
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+action:"register",
+nombres:document.getElementById("regNombres").value,
+apellidos:document.getElementById("regApellidos").value,
+email:document.getElementById("regEmail").value,
+numero:document.getElementById("regNumero").value,
+password:document.getElementById("regPassword").value
+})
+})
+
+.then(res=>res.json())
+
+.then(data=>{
+
+if(data.success){
+
+alert("Cuenta creada correctamente");
+switchTab("login");
+
+}else{
+
+alert(data.msg || "Error al registrar");
+
+}
+
+});
+
+});
+
+</script>
+
+</body>
+</html>

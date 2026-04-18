@@ -1,0 +1,506 @@
+/* 1. VARIABLES Y RESET */
+    :root {
+      --primary-color: #2196f3;
+      --hover-color: #1976d2;
+      --bg-color: #f4f6f8;
+      --radius: 8px;
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow: 0 3px 8px rgba(0, 0, 0, 0.07);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--bg-color);
+      font-size: 13px;
+      color: #333;
+    }
+
+    /* 2. HEADER Y PERFIL PRINCIPAL */
+    .header {
+      text-align: center;
+      padding: 1px 7px;
+      background: #ffffff;
+      position: relative;
+      border-bottom: 1px solid #eee;
+    }
+
+    .share-page {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 20px;
+      color: var(--primary-color);
+      cursor: pointer;
+    }
+
+    .profile-main {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3.5px solid var(--primary-color);
+      cursor: pointer;
+      margin-bottom: 5px;
+    }
+
+    .header p { margin: 1px 0; }
+
+    /* 3. SCROLL DE MINI PERFILES */
+    .mini-profiles-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 15px 10px;
+      margin-top: 5px;
+      scroll-behavior: smooth;
+    }
+
+    .mini-profiles-scroll::-webkit-scrollbar { height: 5px; }
+    .mini-profiles-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+
+    .mini-profile {
+      flex: 0 0 auto;
+      width: 75px;
+      text-align: center;
+      font-size: 11px;
+    }
+
+    .mini-profile img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #eee;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .mini-profile img:hover {
+      transform: scale(1.05);
+      border-color: var(--primary-color);
+    }
+
+    .add-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      color: #fff;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin: 0 auto;
+    }
+
+    /* 4. TABS (BOTONES) */
+    .tab-buttons {
+      display: flex;
+      justify-content: center;
+      background: #fff;
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .tablink {
+      padding: 10px 15px;
+      border: none;
+      background: none;
+      color: #888;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: var(--transition);
+    }
+
+    .tablink.active {
+      color: var(--primary-color);
+      border-bottom-color: var(--primary-color);
+    }
+
+    /* 5. TARJETAS Y CONTENIDO */
+    .tabcontent { display: none; padding: 15px; animation: fadeIn 0.3s; }
+    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .cards { display: flex; flex-direction: column; gap: 12px; }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-top { display: flex; align-items: center; }
+
+    .card img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 12px;
+      border: 1px solid #eee;
+    }
+
+    .card-content h3 { margin: 0; font-size: 15px; flex-grow: 1; }
+
+    .copy-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .copy-btn {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .gate {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      background: #f9f9f9;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .gate-inner { padding: 10px; }
+
+    /* 6. BOTONES DE ACCIÓN (AGREGAR / PAGOS) */
+    .card-add {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px;
+      background: #fff;
+      border: 2px dashed #ddd;
+      border-radius: 12px;
+      color: var(--primary-color);
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .payment-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pay-btn {
+      width: 100%;
+      max-width: 300px;
+      height: 45px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .paypal { background: #0070ba; }
+    .googlepay { background: #000; }
+    .googlepay img { filter: brightness(0) invert(1); }
+    .cel { background: #6d1ed1; color: white; font-weight: bold; gap: 8px; }
+
+    /* 7. MODALES */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: #fff;
+      border-radius: 16px;
+      padding: 25px;
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
+      position: relative;
+      animation: scaleUp 0.3s ease;
+    }
+
+    @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .close { position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer; color: #999; }
+    
+    .btn-visit {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-color);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+    /* Estilos Formulario Modal */
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+  
+  
+  
+  
+  
+ 
+
+/* Botón editar */
+.edit-btn {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #1e88e5;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.edit-btn:hover {
+  background: #1565c0;
+  transform: scale(1.1);
+}
+
+.edit-btn i {
+  font-size: 14px;
+}
+  
+  .profile-header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0 10px;
+}
+
+.profile-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+  
+  
+  
+  
+  
+  
+  
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+
+.modal-box{
+  background:#fff;
+  width:95%;
+  max-width:500px;
+  border-radius:14px;
+  display:flex;
+  flex-direction:column;
+}
+
+.modal-header{
+  padding:14px;
+  font-weight:bold;
+  border-bottom:1px solid #ddd;
+  display:flex;
+  justify-content:space-between;
+  position: relative;
+  margin:10px;
+}
+
+.modal-body{
+  padding:14px;
+  max-height:60vh;
+  overflow-y:auto;
+}
+
+.close{
+  position: absolute;
+  top: 10px;
+  right: 14px;
+
+  font-size: 22px;
+  font-weight: 300;
+  color: #888;
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.close:hover{
+  color: #000;
+}
+
+  .modal button{
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  background:#111;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.modal button:hover{opacity:.85}
+  
+/* FORMULARIOS */
+input, textarea, select{
+  width:100%;
+  padding:10px;
+  margin-bottom:12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+
+textarea{resize:none}
+
+.switch{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.submit{
+  background:#0a7cff;
+}
+
+
+
+
+
+
+
+.card-top{
+  position: relative;
+}
+
+.card-menu{
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.card-menu i{
+  font-size: 18px;
+  color: #666;
+  cursor: pointer;
+}
+
+.menu-dropdown{
+  position: absolute;
+  top: 25px;
+  right: 0;
+
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+
+  display: none;
+  flex-direction: column;
+  min-width: 140px;
+  z-index: 10;
+}
+
+.menu-dropdown button{
+  background: none;
+  border: none;
+  padding: 10px 14px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-dropdown button:hover{
+  background: #f4f6f8;
+}
+
+.menu-dropdown .danger{
+  color: #e60000;
+}
+
+
+
+/* BOTÓN FLOTANTE */
+.search-float-btn{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #111;
+  color: #fff;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.3);
+  cursor:pointer;
+  z-index:999;
+}
+
+.search-float-btn:hover{
+  background:#333;
+}
+
+/* ALERTA */
+#searchAlert{
+  padding:10px;
+  border-radius:8px;
+  font-size:14px;
+}
+
+.alert-success{
+  background:#d4edda;
+  color:#155724;
+}
+
+.alert-error{
+  background:#f8d7da;
+  color:#721c24;
+}
