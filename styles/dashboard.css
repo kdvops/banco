@@ -271,6 +271,30 @@
   background: rgba(244, 247, 251, 0.96);
 }
 
+.app-page #modal .menu-dropdown button {
+  width: 100%;
+  min-height: auto;
+  padding: 10px 12px;
+  justify-content: flex-start;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  color: #16263e;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.app-page #modal .menu-dropdown button:hover {
+  background: #f4f6f8;
+  transform: none;
+  box-shadow: none;
+}
+
+.app-page #modal .menu-dropdown .danger {
+  color: #d84848;
+}
+
 .app-page .service-modal-image--editable {
   width: 90px;
   height: 90px;
