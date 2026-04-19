@@ -10,7 +10,9 @@ CREATE DATABASE IF NOT EXISTS `app_db`
 USE `app_db`;
 
 DROP TABLE IF EXISTS `cripto_wallets`;
+DROP TABLE IF EXISTS `cripto_activos`;
 DROP TABLE IF EXISTS `cuentas_bancarias`;
+DROP TABLE IF EXISTS `bancos`;
 DROP TABLE IF EXISTS `pagos_online`;
 DROP TABLE IF EXISTS `servicios`;
 DROP TABLE IF EXISTS `usuarios`;
@@ -45,31 +47,55 @@ CREATE TABLE `servicios` (
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `bancos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `icono` varchar(200) NOT NULL DEFAULT 'images.png',
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_bancos_nombre` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `cuentas_bancarias` (
   `id` int NOT NULL AUTO_INCREMENT,
   `usuario_id` int NOT NULL,
-  `banco` enum('BHD','Ademi','Ban Reservas','Santa Cruz') DEFAULT NULL,
+  `banco_id` int NOT NULL,
   `tipo_cuenta` enum('Ahorro','Corriente') DEFAULT NULL,
   `numero_cuenta` varchar(50) DEFAULT NULL,
-  `imagen` varchar(200) NOT NULL DEFAULT 'images.png',
   PRIMARY KEY (`id`),
   KEY `idx_cuentas_usuario_id` (`usuario_id`),
+  KEY `idx_cuentas_banco_id` (`banco_id`),
   CONSTRAINT `fk_cuentas_usuario`
     FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `fk_cuentas_banco`
+    FOREIGN KEY (`banco_id`) REFERENCES `bancos` (`id`)
     ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `cripto_activos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  `red` varchar(50) NOT NULL,
+  `icono` varchar(200) NOT NULL DEFAULT 'images.png',
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_cripto_activos_nombre_red` (`nombre`, `red`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `cripto_wallets` (
   `id` int NOT NULL AUTO_INCREMENT,
   `usuario_id` int NOT NULL,
-  `moneda` varchar(50) DEFAULT NULL,
-  `red` varchar(50) DEFAULT NULL,
+  `cripto_activo_id` int NOT NULL,
   `direccion` varchar(255) DEFAULT NULL,
-  `imagen` varchar(200) NOT NULL DEFAULT 'images.png',
   PRIMARY KEY (`id`),
   KEY `idx_cripto_usuario_id` (`usuario_id`),
+  KEY `idx_cripto_activo_id` (`cripto_activo_id`),
   CONSTRAINT `fk_cripto_usuario`
     FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `fk_cripto_activo`
+    FOREIGN KEY (`cripto_activo_id`) REFERENCES `cripto_activos` (`id`)
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -96,15 +122,26 @@ INSERT INTO `servicios` (`id`, `usuario_id`, `imagen`, `nombre_servicio`, `resen
 (6, 3, 'uploads/1774581842_RobloxScreenShot20260213_230031511.png', 'Soporte', 'Disponible para trabajos', 'http://localhost/banco/index.php'),
 (14, 1, 'uploads/1775010298_acuario.jpg', 'Acuario', 'sss', 'http://localhost/banco/index.php');
 
-INSERT INTO `cuentas_bancarias` (`id`, `usuario_id`, `banco`, `tipo_cuenta`, `numero_cuenta`, `imagen`) VALUES
-(5, 1, 'BHD', 'Ahorro', '11111111', 'bhd.jpg'),
-(7, 1, 'Ademi', 'Corriente', '8497071192', 'images.png'),
-(9, 1, 'BHD', 'Ahorro', '22222222', 'bhd.jpg'),
-(11, 1, 'Santa Cruz', 'Ahorro', '1111111', 'images.png');
+INSERT INTO `bancos` (`id`, `nombre`, `icono`, `activo`) VALUES
+(1, 'BHD', 'bhd.jpg', 1),
+(2, 'Ademi', 'ademi.png', 1),
+(3, 'Ban Reservas', 'images.png', 1),
+(4, 'Santa Cruz', 'santa cruz.png', 1);
 
-INSERT INTO `cripto_wallets` (`id`, `usuario_id`, `moneda`, `red`, `direccion`, `imagen`) VALUES
-(4, 1, 'ETHER', 'ERC20', '0xA1B2C3D4E5F6', 'images.png'),
-(5, 1, 'BTC', 'BTC', 'bc1qexamplewallet123', 'images.png');
+INSERT INTO `cuentas_bancarias` (`id`, `usuario_id`, `banco_id`, `tipo_cuenta`, `numero_cuenta`) VALUES
+(5, 1, 1, 'Ahorro', '11111111'),
+(7, 1, 2, 'Corriente', '8497071192'),
+(9, 1, 1, 'Ahorro', '22222222'),
+(11, 1, 4, 'Ahorro', '1111111');
+
+INSERT INTO `cripto_activos` (`id`, `nombre`, `red`, `icono`, `activo`) VALUES
+(1, 'BTC', 'BTC', 'btc.png', 1),
+(2, 'ETHER', 'ERC20', 'ether.png', 1),
+(3, 'USDT', 'TRC20', 'images.png', 1);
+
+INSERT INTO `cripto_wallets` (`id`, `usuario_id`, `cripto_activo_id`, `direccion`) VALUES
+(4, 1, 2, '0xA1B2C3D4E5F6'),
+(5, 1, 1, 'bc1qexamplewallet123');
 
 INSERT INTO `pagos_online` (`id`, `usuario_id`, `plataforma`, `enlace`) VALUES
 (3, 1, 'PayPal', 'http://localhost/banco/index.php');

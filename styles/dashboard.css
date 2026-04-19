@@ -41,6 +41,9 @@
 
 .app-page .settings-box {
   width: min(92%, 760px);
+  max-height: min(88vh, 820px);
+  display: flex;
+  flex-direction: column;
   background: white;
   border-radius: 26px;
   overflow: hidden;
@@ -66,9 +69,13 @@
 }
 
 .app-page .settings-body {
+  flex: 1 1 auto;
+  min-height: 0;
   padding: 20px 22px 22px;
   color: #56657a;
   line-height: 1.55;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .app-page .settings-body--rich {
@@ -320,6 +327,7 @@
   .app-page .settings-box {
     width: 100%;
     max-width: none;
+    max-height: min(84vh, 100%);
     border-bottom-left-radius: 18px;
     border-bottom-right-radius: 18px;
   }

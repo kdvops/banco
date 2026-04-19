@@ -119,22 +119,33 @@ if ($action === "servicio") {
 }
 
 if ($action === "cuenta") {
-    $banco = $_POST['banco'] ?? '';
+    $bancoId = (int) ($_POST['banco_id'] ?? 0);
     $tipo = $_POST['tipo'] ?? '';
     $numero = trim($_POST['numero'] ?? '');
-    $imagenesBanco = [
-        'BHD' => 'bhd.jpg',
-        'Ademi' => 'images.png',
-        'Ban Reservas' => 'images.png',
-        'Santa Cruz' => 'images.png',
-    ];
-    $imagen = $imagenesBanco[$banco] ?? 'images.png';
+
+    if ($bancoId <= 0) {
+        echo json_encode(["status" => "error", "msg" => "Selecciona un banco valido"]);
+        exit;
+    }
+
+    $stmtBank = mysqli_prepare($conn, "SELECT id FROM bancos WHERE id = ? AND activo = 1 LIMIT 1");
+    mysqli_stmt_bind_param($stmtBank, "i", $bancoId);
+    mysqli_stmt_execute($stmtBank);
+    $bankResult = mysqli_stmt_get_result($stmtBank);
+
+    if (!$bankResult || !mysqli_fetch_assoc($bankResult)) {
+        mysqli_stmt_close($stmtBank);
+        echo json_encode(["status" => "error", "msg" => "El banco seleccionado no esta disponible"]);
+        exit;
+    }
+
+    mysqli_stmt_close($stmtBank);
 
     $stmt = mysqli_prepare(
         $conn,
-        "INSERT INTO cuentas_bancarias (usuario_id, banco, tipo_cuenta, numero_cuenta, imagen) VALUES (?, ?, ?, ?, ?)"
+        "INSERT INTO cuentas_bancarias (usuario_id, banco_id, tipo_cuenta, numero_cuenta) VALUES (?, ?, ?, ?)"
     );
-    mysqli_stmt_bind_param($stmt, "issss", $user_id, $banco, $tipo, $numero, $imagen);
+    mysqli_stmt_bind_param($stmt, "iiss", $user_id, $bancoId, $tipo, $numero);
 
     if (mysqli_stmt_execute($stmt)) {
         echo json_encode(["status" => "ok", "tipo" => "cuenta"]);
@@ -147,16 +158,32 @@ if ($action === "cuenta") {
 }
 
 if ($action === "crypto") {
-    $moneda = $_POST['moneda'] ?? '';
-    $red = $_POST['red'] ?? '';
+    $cryptoAssetId = (int) ($_POST['cripto_activo_id'] ?? 0);
     $direccion = trim($_POST['direccion'] ?? '');
-    $imagen = 'images.png';
+
+    if ($cryptoAssetId <= 0) {
+        echo json_encode(["status" => "error", "msg" => "Selecciona una criptomoneda valida"]);
+        exit;
+    }
+
+    $stmtAsset = mysqli_prepare($conn, "SELECT id FROM cripto_activos WHERE id = ? AND activo = 1 LIMIT 1");
+    mysqli_stmt_bind_param($stmtAsset, "i", $cryptoAssetId);
+    mysqli_stmt_execute($stmtAsset);
+    $assetResult = mysqli_stmt_get_result($stmtAsset);
+
+    if (!$assetResult || !mysqli_fetch_assoc($assetResult)) {
+        mysqli_stmt_close($stmtAsset);
+        echo json_encode(["status" => "error", "msg" => "La opcion cripto seleccionada no esta disponible"]);
+        exit;
+    }
+
+    mysqli_stmt_close($stmtAsset);
 
     $stmt = mysqli_prepare(
         $conn,
-        "INSERT INTO cripto_wallets (usuario_id, moneda, red, direccion, imagen) VALUES (?, ?, ?, ?, ?)"
+        "INSERT INTO cripto_wallets (usuario_id, cripto_activo_id, direccion) VALUES (?, ?, ?)"
     );
-    mysqli_stmt_bind_param($stmt, "issss", $user_id, $moneda, $red, $direccion, $imagen);
+    mysqli_stmt_bind_param($stmt, "iis", $user_id, $cryptoAssetId, $direccion);
 
     if (mysqli_stmt_execute($stmt)) {
         echo json_encode(["status" => "ok", "tipo" => "crypto"]);

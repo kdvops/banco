@@ -2,6 +2,8 @@
 
 function app_render_dashboard_management_modals(array $user, array $payments, array $options = []): void
 {
+    $banks = $options['banks'] ?? [];
+    $cryptoAssets = $options['crypto_assets'] ?? [];
     $publicHref = (string) ($options['public_href'] ?? '#');
     $shareTitle = (string) ($options['share_title'] ?? 'Perfil publico');
     $counts = $options['counts'] ?? [];
@@ -45,7 +47,14 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
     echo '<button type="button" class="close js-close-modal" data-modal-target="cuenta">&times;</button></div>';
     echo '<form id="cuentaForm" class="modal-body modal-form">';
     echo '<input type="hidden" name="action" value="cuenta">';
-    echo '<label>Banco</label><select name="banco" required><option>BHD</option><option>Ademi</option><option>Ban Reservas</option><option>Santa Cruz</option></select>';
+    echo '<label>Banco</label><select name="banco_id" required>';
+    echo '<option value="">Selecciona un banco</option>';
+
+    foreach ($banks as $bank) {
+        echo '<option value="' . (int) ($bank['id'] ?? 0) . '">' . app_e($bank['nombre'] ?? '') . '</option>';
+    }
+
+    echo '</select>';
     echo '<label>Tipo de cuenta</label><select name="tipo"><option>Ahorro</option><option>Corriente</option></select>';
     echo '<label>Numero de cuenta</label><input type="text" name="numero" placeholder="Numero de cuenta" required>';
     echo '<button type="submit" class="submit submit--full">Guardar</button>';
@@ -55,8 +64,15 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
     echo '<button type="button" class="close js-close-modal" data-modal-target="cartera">&times;</button></div>';
     echo '<form id="cryptoForm" class="modal-body modal-form">';
     echo '<input type="hidden" name="action" value="crypto">';
-    echo '<label>Criptomoneda</label><select name="moneda"><option>BTC</option><option>ETHER</option></select>';
-    echo '<label>Red</label><select name="red"><option value="BTC">BTC</option><option value="ERC20">ERC20</option><option value="TRC20">TRC20</option></select>';
+    echo '<label>Criptomoneda</label><select name="cripto_activo_id" required>';
+    echo '<option value="">Selecciona una opcion</option>';
+
+    foreach ($cryptoAssets as $asset) {
+        $optionLabel = trim((string) ($asset['nombre'] ?? '')) . ' (' . trim((string) ($asset['red'] ?? '')) . ')';
+        echo '<option value="' . (int) ($asset['id'] ?? 0) . '">' . app_e($optionLabel) . '</option>';
+    }
+
+    echo '</select>';
     echo '<label>Direccion</label><input type="text" name="direccion" placeholder="Direccion de la cartera" required>';
     echo '<button type="submit" class="submit submit--full">Guardar</button>';
     echo '</form></div></div>';
