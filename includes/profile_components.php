@@ -5,9 +5,11 @@ function app_render_profile_header(array $user, array $services, array $options 
     $editable = (bool) ($options['editable'] ?? false);
     $shareTitle = $options['share_title'] ?? ('Perfil de ' . ($user['nombres'] ?? 'usuario'));
     $shareUrl = $options['share_url'] ?? '';
+    $compactEmptyServices = (bool) ($options['compact_empty_services'] ?? false);
     $profileImage = app_asset_url($user['imagen'] ?? 'perfil.png', ['uploads', 'imagen'], 'uploads/perfil.png');
     $fullName = trim(($user['nombres'] ?? '') . ' ' . ($user['apellidos'] ?? ''));
     $description = trim((string) ($user['resena_personal'] ?? ''));
+    $hasServices = !empty($services);
 
     echo '<header class="header">';
 
@@ -37,36 +39,49 @@ function app_render_profile_header(array $user, array $services, array $options 
 
     echo '</div></div>';
 
-    echo '<section class="mini-profiles-block">';
-    echo '<div class="section-heading">';
-    echo '<p class="section-kicker">Accesos rapidos</p>';
-    echo '<h2 class="section-title">Servicios y enlaces destacados</h2>';
-    echo '</div>';
-    echo '<div class="mini-profiles-scroll">';
+    if ($hasServices || $editable) {
+        if ($compactEmptyServices && !$hasServices && $editable) {
+            echo '<section class="mini-profiles-block mini-profiles-block--compact">';
+            echo '<div class="mini-profiles-compact-row">';
+            echo '<div class="mini-profiles-compact-copy">';
+            echo '<p class="section-kicker">Accesos rapidos</p>';
+            echo '<h2 class="section-title">Aun no has agregado servicios destacados</h2>';
+            echo '</div>';
+            echo '<button type="button" class="mini-profiles-compact-btn js-open-modal" data-modal-target="servicio"><i class="fa-solid fa-bolt"></i> Agregar acceso rapido</button>';
+            echo '</div></section>';
+        } else {
+            echo '<section class="mini-profiles-block">';
+            echo '<div class="section-heading">';
+            echo '<p class="section-kicker">Accesos rapidos</p>';
+            echo '<h2 class="section-title">Servicios y enlaces destacados</h2>';
+            echo '</div>';
+            echo '<div class="mini-profiles-scroll">';
 
-    foreach ($services as $servicio) {
-        $serviceImage = app_asset_url($servicio['imagen'] ?? '', ['uploads', 'imagen'], 'imagen/perfil.png');
+            foreach ($services as $servicio) {
+                $serviceImage = app_asset_url($servicio['imagen'] ?? '', ['uploads', 'imagen'], 'imagen/perfil.png');
 
-        echo '<button type="button" class="mini-profile js-mini-profile"';
-        echo ' data-service-id="' . (int) $servicio['id'] . '"';
-        echo ' data-service-img="' . app_e($serviceImage) . '"';
-        echo ' data-service-title="' . app_e($servicio['nombre_servicio'] ?? '') . '"';
-        echo ' data-service-text="' . app_e($servicio['resena'] ?? '') . '"';
-        echo ' data-service-link="' . app_e($servicio['enlace'] ?? '') . '"';
-        echo '>';
-        echo '<img src="' . app_e($serviceImage) . '" alt="' . app_e($servicio['nombre_servicio'] ?? 'Servicio') . '">';
-        echo '<span>' . app_e($servicio['nombre_servicio'] ?? '') . '</span>';
-        echo '</button>';
+                echo '<button type="button" class="mini-profile js-mini-profile"';
+                echo ' data-service-id="' . (int) $servicio['id'] . '"';
+                echo ' data-service-img="' . app_e($serviceImage) . '"';
+                echo ' data-service-title="' . app_e($servicio['nombre_servicio'] ?? '') . '"';
+                echo ' data-service-text="' . app_e($servicio['resena'] ?? '') . '"';
+                echo ' data-service-link="' . app_e($servicio['enlace'] ?? '') . '"';
+                echo '>';
+                echo '<img src="' . app_e($serviceImage) . '" alt="' . app_e($servicio['nombre_servicio'] ?? 'Servicio') . '">';
+                echo '<span>' . app_e($servicio['nombre_servicio'] ?? '') . '</span>';
+                echo '</button>';
+            }
+
+            if ($editable) {
+                echo '<div class="mini-profile">';
+                echo '<button type="button" class="add-circle js-open-modal" data-modal-target="servicio">+</button>';
+                echo '<span>Agregar</span>';
+                echo '</div>';
+            }
+
+            echo '</div></section>';
+        }
     }
-
-    if ($editable) {
-        echo '<div class="mini-profile">';
-        echo '<button type="button" class="add-circle js-open-modal" data-modal-target="servicio">+</button>';
-        echo '<span>Agregar</span>';
-        echo '</div>';
-    }
-
-    echo '</div></section>';
     echo '</header>';
 }
 

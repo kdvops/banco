@@ -48,6 +48,7 @@ app_render_profile_header($user, $collections['servicios'], [
     'editable' => true,
     'share_title' => 'Perfil de ' . ($user['nombres'] ?? 'usuario'),
     'share_url' => $publicHref,
+    'compact_empty_services' => true,
 ]);
 app_render_profile_tabs();
 app_render_accounts_section($collections['cuentas'], true);

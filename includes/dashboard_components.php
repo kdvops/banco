@@ -197,6 +197,7 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
     echo '<button type="button" class="settings-action js-copy-url js-settings-dismiss" data-copy-url="' . app_e($publicHref) . '"><i class="fa-regular fa-copy"></i><span>Copiar enlace publico</span></button>';
     echo '<a href="' . app_e($publicHref) . '" class="settings-action settings-action--link" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i><span>Ver perfil publico</span></a>';
     echo '<button type="button" class="settings-action js-settings-open-modal" data-modal-target="perfil"><i class="fa-solid fa-user-pen"></i><span>Editar perfil</span></button>';
+    echo '<button type="button" class="settings-action js-settings-open-modal" data-modal-target="servicio"><i class="fa-solid fa-bolt"></i><span>Agregar acceso rapido</span></button>';
     echo '<button type="button" class="settings-action js-settings-open-modal" data-modal-target="cuenta"><i class="fa-solid fa-building-columns"></i><span>Agregar cuenta bancaria</span></button>';
     echo '<button type="button" class="settings-action js-settings-open-modal" data-modal-target="cartera"><i class="fa-brands fa-bitcoin"></i><span>Agregar cartera cripto</span></button>';
     echo '<button type="button" class="settings-action js-settings-open-modal" data-modal-target="online"><i class="fa-solid fa-wallet"></i><span>Agregar cobro online</span></button>';

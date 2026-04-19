@@ -167,6 +167,46 @@ body.app-page .mini-profiles-block {
   border: 1px solid rgba(225, 233, 245, 0.85);
 }
 
+body.app-page .mini-profiles-block--compact {
+  padding: 16px 18px;
+}
+
+body.app-page .mini-profiles-compact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+body.app-page .mini-profiles-compact-copy {
+  min-width: 0;
+}
+
+body.app-page .mini-profiles-compact-copy .section-title {
+  font-size: 16px;
+}
+
+body.app-page .mini-profiles-compact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #11223b 0%, #0a7cff 100%);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--app-transition);
+}
+
+body.app-page .mini-profiles-compact-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 24px rgba(16, 35, 60, 0.14);
+}
+
 body.app-page .section-heading {
   text-align: left;
   padding: 0 10px;
@@ -994,6 +1034,16 @@ body.app-page .alert-error {
     margin-top: 16px;
     padding: 12px 10px 8px;
     border-radius: 18px;
+  }
+
+  body.app-page .mini-profiles-compact-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.app-page .mini-profiles-compact-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   body.app-page .mini-profiles-scroll {
