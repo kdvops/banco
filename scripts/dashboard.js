@@ -15,6 +15,28 @@ document.querySelector(".js-settings-close")?.addEventListener("click", () => {
   settingsModal.style.display = "none";
 });
 
+document.querySelectorAll(".js-settings-dismiss").forEach((trigger) => {
+  trigger.addEventListener("click", () => {
+    settingsModal.style.display = "none";
+  });
+});
+
+document.querySelectorAll(".js-settings-open-modal").forEach((trigger) => {
+  trigger.addEventListener("click", () => {
+    settingsModal.style.display = "none";
+    openModalById(trigger.dataset.modalTarget);
+  });
+});
+
+document.querySelectorAll(".js-copy-url").forEach((trigger) => {
+  trigger.addEventListener("click", async () => {
+    const rawUrl = trigger.dataset.copyUrl || window.location.href;
+    const copyUrl = new URL(rawUrl, window.location.href).href;
+    await navigator.clipboard.writeText(copyUrl);
+    alert("Enlace copiado: " + copyUrl);
+  });
+});
+
 window.addEventListener("click", (event) => {
   if (event.target === settingsModal) {
     settingsModal.style.display = "none";

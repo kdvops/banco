@@ -40,22 +40,22 @@
 }
 
 .app-page .settings-box {
-  width: 90%;
-  max-width: 340px;
+  width: min(92%, 760px);
   background: white;
-  border-radius: 20px;
+  border-radius: 26px;
   overflow: hidden;
   box-shadow: 0 28px 60px rgba(16,35,60,.24);
 }
 
 .app-page .settings-header {
-  padding: 18px 18px 16px;
+  padding: 20px 22px 18px;
   background: linear-gradient(180deg, #f7f9fc 0%, #eef3f8 100%);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: bold;
-  border-bottom: 1px solid #ddd;
+  font-weight: 800;
+  color: #14243c;
+  border-bottom: 1px solid rgba(222,231,242,.92);
 }
 
 .app-page .cerrar-x {
@@ -66,9 +66,165 @@
 }
 
 .app-page .settings-body {
-  padding: 18px;
+  padding: 20px 22px 22px;
   color: #56657a;
   line-height: 1.55;
+}
+
+.app-page .settings-body--rich {
+  display: grid;
+  gap: 18px;
+}
+
+.app-page .settings-panel {
+  padding: 18px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #11223b 0%, #173b5d 100%);
+  color: #f4f8ff;
+}
+
+.app-page .settings-panel h3 {
+  margin: 0 0 8px;
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.05;
+}
+
+.app-page .settings-panel p {
+  margin: 0;
+  color: rgba(244,248,255,.78);
+}
+
+.app-page .settings-kicker {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #7ed2ff;
+}
+
+.app-page .settings-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.app-page .settings-stat {
+  padding: 14px 12px;
+  border-radius: 16px;
+  background: #f7faff;
+  border: 1px solid rgba(226,234,244,.92);
+  text-align: center;
+}
+
+.app-page .settings-stat strong {
+  display: block;
+  font-size: 24px;
+  line-height: 1;
+  color: #12233d;
+}
+
+.app-page .settings-stat span {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #61718a;
+}
+
+.app-page .settings-group {
+  display: grid;
+  gap: 12px;
+}
+
+.app-page .settings-group h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #14243c;
+}
+
+.app-page .settings-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.app-page .settings-action {
+  min-height: 58px;
+  padding: 14px 16px;
+  border: 1px solid rgba(221,230,241,.95);
+  border-radius: 16px;
+  background: #fff;
+  color: #16263e;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 12px 24px rgba(16,35,60,.06);
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+}
+
+.app-page .settings-action:hover {
+  transform: translateY(-1px);
+  border-color: rgba(10,124,255,.24);
+  box-shadow: 0 18px 30px rgba(16,35,60,.1);
+}
+
+.app-page .settings-action i {
+  width: 18px;
+  text-align: center;
+  color: #0a7cff;
+  flex-shrink: 0;
+}
+
+.app-page .settings-action span {
+  line-height: 1.35;
+}
+
+.app-page .settings-action--primary {
+  background: linear-gradient(135deg, #0a7cff 0%, #0863ca 100%);
+  border-color: transparent;
+  color: #fff;
+}
+
+.app-page .settings-action--primary i {
+  color: #fff;
+}
+
+.app-page .settings-tips {
+  display: grid;
+  gap: 12px;
+}
+
+.app-page .settings-tip {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #f8fbff;
+  border: 1px solid rgba(226,234,244,.92);
+}
+
+.app-page .settings-tip i {
+  margin-top: 2px;
+  color: #0a7cff;
+}
+
+.app-page .settings-tip strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #16263e;
+}
+
+.app-page .settings-tip p,
+.app-page .settings-note {
+  margin: 0;
+  color: #5d6c81;
 }
 
 .app-page .settings-link {
@@ -168,6 +324,19 @@
     border-bottom-right-radius: 18px;
   }
 
+  .app-page .settings-header {
+    padding: 18px 18px 16px;
+  }
+
+  .app-page .settings-body {
+    padding: 16px 18px 18px;
+  }
+
+  .app-page .settings-stats,
+  .app-page .settings-actions {
+    grid-template-columns: 1fr;
+  }
+
   .app-page .search-float-btn {
     right: 14px;
     bottom: max(18px, env(safe-area-inset-bottom));
@@ -178,6 +347,27 @@
 }
 
 @media (max-width: 560px) {
+  .app-page .settings-panel {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .app-page .settings-panel h3 {
+    font-size: 22px;
+  }
+
+  .app-page .settings-action {
+    min-height: 54px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+  }
+
+  .app-page .settings-tip {
+    padding: 12px 14px;
+    border-radius: 14px;
+  }
+
   .app-page .search-float-btn {
     right: 12px;
     bottom: max(88px, calc(env(safe-area-inset-bottom) + 88px));
