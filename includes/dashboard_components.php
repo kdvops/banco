@@ -49,9 +49,25 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
     echo '<input type="hidden" name="action" value="cuenta">';
     echo '<label>Banco</label><select name="banco_id" required>';
     echo '<option value="">Selecciona un banco</option>';
+    $currentCountry = null;
 
     foreach ($banks as $bank) {
+        $countryName = trim((string) ($bank['pais_nombre'] ?? ''));
+
+        if ($countryName !== '' && $countryName !== $currentCountry) {
+            if ($currentCountry !== null) {
+                echo '</optgroup>';
+            }
+
+            echo '<optgroup label="' . app_e($countryName) . '">';
+            $currentCountry = $countryName;
+        }
+
         echo '<option value="' . (int) ($bank['id'] ?? 0) . '">' . app_e($bank['nombre'] ?? '') . '</option>';
+    }
+
+    if ($currentCountry !== null) {
+        echo '</optgroup>';
     }
 
     echo '</select>';

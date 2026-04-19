@@ -47,7 +47,11 @@ function app_fetch_user_by_phone(mysqli $conn, string $phone): ?array
 
 function app_fetch_active_banks(mysqli $conn): array
 {
-    $sql = "SELECT id, nombre, icono, activo FROM bancos WHERE activo = 1 ORDER BY nombre ASC";
+    $sql = "SELECT b.id, b.pais_id, b.nombre, b.icono, b.activo, p.nombre AS pais_nombre, p.codigo_iso2, p.codigo_iso3
+            FROM bancos b
+            INNER JOIN paises p ON p.id = b.pais_id
+            WHERE b.activo = 1
+            ORDER BY p.nombre ASC, b.nombre ASC";
 
     return app_fetch_rows($conn, $sql);
 }
@@ -65,9 +69,10 @@ function app_fetch_profile_collections(mysqli $conn, int $userId): array
         'servicios' => app_fetch_rows($conn, "SELECT * FROM servicios WHERE usuario_id = {$userId} ORDER BY id DESC"),
         'cuentas' => app_fetch_rows(
             $conn,
-            "SELECT cb.id, cb.usuario_id, cb.banco_id, cb.tipo_cuenta, cb.numero_cuenta, b.nombre AS banco, b.icono AS imagen
+            "SELECT cb.id, cb.usuario_id, cb.banco_id, cb.tipo_cuenta, cb.numero_cuenta, b.nombre AS banco, b.icono AS imagen, b.pais_id, p.nombre AS pais_nombre
              FROM cuentas_bancarias cb
              INNER JOIN bancos b ON b.id = cb.banco_id
+             INNER JOIN paises p ON p.id = b.pais_id
              WHERE cb.usuario_id = {$userId}
              ORDER BY cb.id DESC"
         ),
