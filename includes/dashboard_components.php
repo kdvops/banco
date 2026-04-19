@@ -1,7 +1,17 @@
 <?php
 
-function app_render_dashboard_management_modals(array $user, array $payments): void
+function app_render_dashboard_management_modals(array $user, array $payments, array $options = []): void
 {
+    $publicHref = (string) ($options['public_href'] ?? '#');
+    $shareTitle = (string) ($options['share_title'] ?? 'Perfil publico');
+    $counts = $options['counts'] ?? [];
+    $serviceCount = (int) ($counts['servicios'] ?? 0);
+    $accountCount = (int) ($counts['cuentas'] ?? 0);
+    $cryptoCount = (int) ($counts['criptos'] ?? 0);
+    $paymentCount = (int) ($counts['pagos'] ?? count($payments));
+    $totalMethods = $accountCount + $cryptoCount + $paymentCount;
+    $firstName = trim((string) ($user['nombres'] ?? ''));
+
     echo '<div class="modal" id="perfil"><div class="modal-box"><div class="modal-header">Perfil';
     echo '<button type="button" class="close js-close-modal" data-modal-target="perfil">&times;</button></div>';
     echo '<form id="perfilForm" enctype="multipart/form-data" class="modal-body">';
@@ -77,9 +87,50 @@ function app_render_dashboard_management_modals(array $user, array $payments): v
     echo '<button type="submit" class="submit">Buscar</button><div id="searchAlert" class="search-alert"></div>';
     echo '</form></div></div>';
 
-    echo '<div id="settingsModal" class="settings-overlay"><div class="settings-box"><div class="settings-header"><span>Configuracion</span>';
-    echo '<button type="button" class="cerrar-x js-settings-close">&times;</button></div><div class="settings-body">';
-    echo '<p>La configuracion visual sigue disponible. La persistencia en base de datos no estaba implementada en la app original.</p>';
+    echo '<div id="settingsModal" class="settings-overlay"><div class="settings-box">';
+    echo '<div class="settings-header"><span>Centro de perfil</span>';
+    echo '<button type="button" class="cerrar-x js-settings-close" aria-label="Cerrar centro de perfil">&times;</button></div>';
+    echo '<div class="settings-body settings-body--rich">';
+    echo '<section class="settings-panel settings-panel--hero">';
+    echo '<p class="settings-kicker">Organiza y comparte mejor</p>';
+    echo '<h3>' . app_e($firstName !== '' ? $firstName . ', optimiza tu perfil de cobro' : 'Optimiza tu perfil de cobro') . '</h3>';
+    echo '<p>Usa este espacio para compartir tu perfil publico, completar metodos de cobro y dar mas confianza a quien te va a transferir dinero.</p>';
+    echo '</section>';
+
+    echo '<section class="settings-stats" aria-label="Resumen del perfil">';
+    echo '<div class="settings-stat"><strong>' . $serviceCount . '</strong><span>Servicios</span></div>';
+    echo '<div class="settings-stat"><strong>' . $totalMethods . '</strong><span>Metodos</span></div>';
+    echo '<div class="settings-stat"><strong>' . $paymentCount . '</strong><span>Online</span></div>';
+    echo '</section>';
+
+    echo '<section class="settings-group">';
+    echo '<h4>Acciones rapidas</h4>';
+    echo '<div class="settings-actions">';
+    echo '<button type="button" class="settings-action settings-action--primary js-share-page js-settings-dismiss" data-share-title="' . app_e($shareTitle) . '" data-share-url="' . app_e($publicHref) . '"><i class="fa-solid fa-share-nodes"></i><span>Compartir perfil</span></button>';
+    echo '<button type="button" class="settings-action js-copy-url js-settings-dismiss" data-copy-url="' . app_e($publicHref) . '"><i class="fa-regular fa-copy"></i><span>Copiar enlace publico</span></button>';
+    echo '<a href="' . app_e($publicHref) . '" class="settings-action settings-action--link" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i><span>Ver perfil publico</span></a>';
+    echo '<button type="button" class="settings-action js-settings-open-modal" data-modal-target="perfil"><i class="fa-solid fa-user-pen"></i><span>Editar perfil</span></button>';
+    echo '<button type="button" class="settings-action js-settings-open-modal" data-modal-target="cuenta"><i class="fa-solid fa-building-columns"></i><span>Agregar cuenta bancaria</span></button>';
+    echo '<button type="button" class="settings-action js-settings-open-modal" data-modal-target="cartera"><i class="fa-brands fa-bitcoin"></i><span>Agregar cartera cripto</span></button>';
+    echo '<button type="button" class="settings-action js-settings-open-modal" data-modal-target="online"><i class="fa-solid fa-wallet"></i><span>Agregar cobro online</span></button>';
+    echo '<button type="button" class="settings-action js-settings-open-modal" data-modal-target="searchModal"><i class="fa-solid fa-magnifying-glass"></i><span>Buscar por telefono</span></button>';
+    echo '</div>';
+    echo '</section>';
+
+    echo '<section class="settings-group">';
+    echo '<h4>Recomendaciones para cobrar mejor</h4>';
+    echo '<div class="settings-tips">';
+    echo '<article class="settings-tip"><i class="fa-solid fa-layer-group"></i><div><strong>Ofrece mas de un metodo</strong><p>Combina banco, wallet y opcion online para reducir friccion cuando alguien quiera enviarte dinero.</p></div></article>';
+    echo '<article class="settings-tip"><i class="fa-solid fa-badge-check"></i><div><strong>Completa tu perfil publico</strong><p>Foto, nombre y descripcion clara aumentan confianza y hacen mas facil identificarte.</p></div></article>';
+    echo '<article class="settings-tip"><i class="fa-solid fa-bullhorn"></i><div><strong>Comparte un solo enlace</strong><p>En vez de reenviar cuentas por chat, usa tu perfil publico para mantener todo actualizado en un solo lugar.</p></div></article>';
+    echo '</div>';
+    echo '</section>';
+
+    echo '<section class="settings-group">';
+    echo '<h4>Mensaje de confianza</h4>';
+    echo '<p class="settings-note">Esta app organiza datos para recibir dinero, pero no procesa pagos. Mientras mas claro y ordenado este tu perfil, mas rapido podran transferirte sin errores.</p>';
+    echo '</section>';
+
     echo '<a href="logout.php" class="settings-link"><i class="fas fa-sign-out-alt"></i> Cerrar Sesion</a>';
     echo '</div></div></div>';
 

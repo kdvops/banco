@@ -50,7 +50,16 @@ app_render_crypto_section($collections['criptos'], true);
 app_render_payments_section($collections['pagos'], true);
 app_render_profile_modal($user);
 app_render_mini_profile_modal(true);
-app_render_dashboard_management_modals($user, $collections['pagos']);
+app_render_dashboard_management_modals($user, $collections['pagos'], [
+    'public_href' => $publicHref,
+    'share_title' => 'Perfil de ' . ($user['nombres'] ?? 'usuario'),
+    'counts' => [
+        'servicios' => count($collections['servicios']),
+        'cuentas' => count($collections['cuentas']),
+        'criptos' => count($collections['criptos']),
+        'pagos' => count($collections['pagos']),
+    ],
+]);
 app_render_site_footer();
 app_render_page_end([
     'scripts/site-nav.js',

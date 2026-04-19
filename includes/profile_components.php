@@ -174,7 +174,7 @@ function app_render_payments_section(array $payments, bool $editable = false): v
     }
 
     if ($editable) {
-        echo '<button type="button" class="card-add js-open-modal" data-modal-target="online"><i class="fa-brands fa-wallet"></i> Agregar Cartera online</button>';
+        echo '<button type="button" class="card-add js-open-modal" data-modal-target="online"><i class="fa-solid fa-wallet"></i> Agregar Cartera online</button>';
     }
 
     echo '</div></main>';

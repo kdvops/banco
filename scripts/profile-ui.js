@@ -88,11 +88,13 @@ document.querySelectorAll(".js-open-link").forEach((button) => {
 document.querySelectorAll(".js-share-page").forEach((button) => {
   button.addEventListener("click", async () => {
     const title = button.dataset.shareTitle || document.title;
+    const rawUrl = button.dataset.shareUrl || location.href;
+    const shareUrl = new URL(rawUrl, window.location.href).href;
     if (navigator.share) {
-      await navigator.share({ title, url: location.href });
+      await navigator.share({ title, url: shareUrl });
     } else {
-      await navigator.clipboard.writeText(location.href);
-      alert("Enlace copiado: " + location.href);
+      await navigator.clipboard.writeText(shareUrl);
+      alert("Enlace copiado: " + shareUrl);
     }
   });
 });

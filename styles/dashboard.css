@@ -170,9 +170,19 @@
 
   .app-page .search-float-btn {
     right: 14px;
-    bottom: max(14px, env(safe-area-inset-bottom));
+    bottom: max(18px, env(safe-area-inset-bottom));
     width: 52px;
     height: 52px;
     font-size: 18px;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-page .search-float-btn {
+    right: 12px;
+    bottom: max(88px, calc(env(safe-area-inset-bottom) + 88px));
+    width: 50px;
+    height: 50px;
+    font-size: 17px;
   }
 }
