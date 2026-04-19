@@ -52,8 +52,6 @@ function app_render_profile_header(array $user, array $services, array $options 
         } else {
             echo '<section class="mini-profiles-block">';
             echo '<div class="section-heading">';
-            echo '<p class="section-kicker">Accesos rapidos</p>';
-            echo '<h2 class="section-title">Servicios y enlaces destacados</h2>';
             echo '</div>';
             echo '<div class="mini-profiles-scroll">';
 
