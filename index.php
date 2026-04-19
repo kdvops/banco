@@ -13,6 +13,7 @@ if (!$user) {
 $collections = app_fetch_profile_collections($conn, $userId);
 $banks = app_fetch_active_banks($conn);
 $cryptoAssets = app_fetch_active_crypto_assets($conn);
+$cryptoReferences = app_fetch_active_crypto_references($conn);
 $paymentProviders = app_fetch_active_payment_providers($conn);
 $publicHref = !empty($user['numero']) ? 'perfildecuentas.php?numero=' . rawurlencode((string) $user['numero']) : '#';
 
@@ -56,6 +57,7 @@ app_render_mini_profile_modal(true);
 app_render_dashboard_management_modals($user, $collections['pagos'], [
     'banks' => $banks,
     'crypto_assets' => $cryptoAssets,
+    'crypto_references' => $cryptoReferences,
     'payment_providers' => $paymentProviders,
     'public_href' => $publicHref,
     'share_title' => 'Perfil de ' . ($user['nombres'] ?? 'usuario'),

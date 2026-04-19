@@ -159,7 +159,9 @@ if ($action === "cuenta") {
 
 if ($action === "crypto") {
     $cryptoAssetId = (int) ($_POST['cripto_activo_id'] ?? 0);
+    $cryptoReferenceId = (int) ($_POST['referencia_cripto_id'] ?? 0);
     $direccion = trim($_POST['direccion'] ?? '');
+    $memoTag = trim($_POST['memo_tag'] ?? '');
 
     if ($cryptoAssetId <= 0) {
         echo json_encode(["status" => "error", "msg" => "Selecciona una criptomoneda valida"]);
@@ -179,11 +181,29 @@ if ($action === "crypto") {
 
     mysqli_stmt_close($stmtAsset);
 
+    $referenceIdForDb = null;
+
+    if ($cryptoReferenceId > 0) {
+        $stmtReference = mysqli_prepare($conn, "SELECT id FROM referencias_cripto WHERE id = ? AND activo = 1 LIMIT 1");
+        mysqli_stmt_bind_param($stmtReference, "i", $cryptoReferenceId);
+        mysqli_stmt_execute($stmtReference);
+        $referenceResult = mysqli_stmt_get_result($stmtReference);
+
+        if (!$referenceResult || !mysqli_fetch_assoc($referenceResult)) {
+            mysqli_stmt_close($stmtReference);
+            echo json_encode(["status" => "error", "msg" => "La referencia seleccionada no esta disponible"]);
+            exit;
+        }
+
+        mysqli_stmt_close($stmtReference);
+        $referenceIdForDb = $cryptoReferenceId;
+    }
+
     $stmt = mysqli_prepare(
         $conn,
-        "INSERT INTO cripto_wallets (usuario_id, cripto_activo_id, direccion) VALUES (?, ?, ?)"
+        "INSERT INTO cripto_wallets (usuario_id, cripto_activo_id, referencia_cripto_id, direccion, memo_tag) VALUES (?, ?, ?, ?, ?)"
     );
-    mysqli_stmt_bind_param($stmt, "iis", $user_id, $cryptoAssetId, $direccion);
+    mysqli_stmt_bind_param($stmt, "iiiss", $user_id, $cryptoAssetId, $referenceIdForDb, $direccion, $memoTag);
 
     if (mysqli_stmt_execute($stmt)) {
         echo json_encode(["status" => "ok", "tipo" => "crypto"]);

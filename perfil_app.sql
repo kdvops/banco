@@ -10,6 +10,7 @@ CREATE DATABASE IF NOT EXISTS `app_db`
 USE `app_db`;
 
 DROP TABLE IF EXISTS `cripto_wallets`;
+DROP TABLE IF EXISTS `referencias_cripto`;
 DROP TABLE IF EXISTS `cripto_activos`;
 DROP TABLE IF EXISTS `cuentas_bancarias`;
 DROP TABLE IF EXISTS `bancos`;
@@ -102,19 +103,34 @@ CREATE TABLE `cripto_activos` (
   UNIQUE KEY `uk_cripto_activos_nombre_red` (`nombre`, `red`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `referencias_cripto` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(120) NOT NULL,
+  `tipo` varchar(40) DEFAULT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_referencias_cripto_nombre` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `cripto_wallets` (
   `id` int NOT NULL AUTO_INCREMENT,
   `usuario_id` int NOT NULL,
   `cripto_activo_id` int NOT NULL,
+  `referencia_cripto_id` int DEFAULT NULL,
   `direccion` varchar(255) DEFAULT NULL,
+  `memo_tag` varchar(120) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_cripto_usuario_id` (`usuario_id`),
   KEY `idx_cripto_activo_id` (`cripto_activo_id`),
+  KEY `idx_cripto_referencia_id` (`referencia_cripto_id`),
   CONSTRAINT `fk_cripto_usuario`
     FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
     ON DELETE CASCADE,
   CONSTRAINT `fk_cripto_activo`
     FOREIGN KEY (`cripto_activo_id`) REFERENCES `cripto_activos` (`id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `fk_cripto_referencia`
+    FOREIGN KEY (`referencia_cripto_id`) REFERENCES `referencias_cripto` (`id`)
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -480,11 +496,34 @@ INSERT INTO `cuentas_bancarias` (`id`, `usuario_id`, `banco_id`, `tipo_cuenta`, 
 INSERT INTO `cripto_activos` (`id`, `nombre`, `red`, `icono`, `activo`) VALUES
 (1, 'BTC', 'BTC', 'btc.png', 1),
 (2, 'ETHER', 'ERC20', 'ether.png', 1),
-(3, 'USDT', 'TRC20', 'images.png', 1);
+(3, 'USDT', 'TRC20', 'images.png', 1),
+(4, 'BNB', 'BEP20', 'images.png', 1),
+(5, 'USDC', 'ERC20', 'images.png', 1),
+(6, 'SOL', 'SOL', 'images.png', 1),
+(7, 'XRP', 'XRP Ledger', 'images.png', 1),
+(8, 'ADA', 'Cardano', 'images.png', 1),
+(9, 'TRX', 'TRC20', 'images.png', 1),
+(10, 'DOGE', 'Dogecoin', 'images.png', 1),
+(11, 'LTC', 'Litecoin', 'images.png', 1),
+(12, 'MATIC', 'Polygon', 'images.png', 1);
 
-INSERT INTO `cripto_wallets` (`id`, `usuario_id`, `cripto_activo_id`, `direccion`) VALUES
-(4, 1, 2, '0xA1B2C3D4E5F6'),
-(5, 1, 1, 'bc1qexamplewallet123');
+INSERT INTO `referencias_cripto` (`id`, `nombre`, `tipo`, `activo`) VALUES
+(1, 'MetaMask', 'wallet', 1),
+(2, 'Trust Wallet', 'wallet', 1),
+(3, 'Binance', 'exchange', 1),
+(4, 'Coinbase', 'exchange', 1),
+(5, 'Ledger', 'hardware_wallet', 1),
+(6, 'Phantom', 'wallet', 1),
+(7, 'Exodus', 'wallet', 1),
+(8, 'Bybit', 'exchange', 1),
+(9, 'Kraken', 'exchange', 1),
+(10, 'OKX', 'exchange', 1),
+(11, 'KuCoin', 'exchange', 1),
+(12, 'Trezor', 'hardware_wallet', 1);
+
+INSERT INTO `cripto_wallets` (`id`, `usuario_id`, `cripto_activo_id`, `referencia_cripto_id`, `direccion`, `memo_tag`) VALUES
+(4, 1, 2, 1, '0xA1B2C3D4E5F6', NULL),
+(5, 1, 1, 5, 'bc1qexamplewallet123', NULL);
 
 INSERT INTO `proveedores_pago_online` (`id`, `nombre`, `icono`, `activo`) VALUES
 (1, 'Zelle', 'images.png', 1),

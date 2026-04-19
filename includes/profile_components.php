@@ -125,10 +125,18 @@ function app_render_crypto_section(array $cryptos, bool $editable = false): void
 
     foreach ($cryptos as $crypto) {
         $image = app_asset_url($crypto['imagen'] ?? '', ['imagen', 'uploads'], 'imagen/images.png');
+        $reference = trim((string) ($crypto['referencia'] ?? ''));
+        $memoTag = trim((string) ($crypto['memo_tag'] ?? ''));
 
         echo '<div class="card"><div class="card-top">';
         echo '<img src="' . app_e($image) . '" alt="' . app_e($crypto['moneda'] ?? 'Cripto') . '">';
-        echo '<div class="card-content"><h3>' . app_e($crypto['moneda'] ?? '') . ' (Red ' . app_e($crypto['red'] ?? '') . ')</h3></div>';
+        echo '<div class="card-content"><h3>' . app_e($crypto['moneda'] ?? '') . ' (Red ' . app_e($crypto['red'] ?? '') . ')</h3>';
+
+        if ($reference !== '') {
+            echo '<p class="card-meta">Referencia: ' . app_e($reference) . '</p>';
+        }
+
+        echo '</div>';
         echo '<button type="button" class="toggle-btn js-toggle-gate" aria-label="Mostrar direccion"><i class="fa-regular fa-eye"></i></button>';
 
         if ($editable) {
@@ -140,9 +148,20 @@ function app_render_crypto_section(array $cryptos, bool $editable = false): void
         }
 
         echo '</div>';
-        echo '<div class="gate"><div class="gate-inner"><div class="copy-row">';
+        echo '<div class="gate"><div class="gate-inner"><div class="copy-stack">';
+        echo '<div class="copy-row">';
         echo '<span class="copy-text">' . app_e($crypto['direccion'] ?? '') . '</span>';
         echo '<button type="button" class="copy-btn js-copy-btn" aria-label="Copiar wallet"><i class="fa-regular fa-copy"></i></button>';
+        echo '</div>';
+
+        if ($memoTag !== '') {
+            echo '<div class="copy-row copy-row--secondary">';
+            echo '<span class="copy-label">Memo / Tag</span>';
+            echo '<span class="copy-text">' . app_e($memoTag) . '</span>';
+            echo '<button type="button" class="copy-btn js-copy-btn" aria-label="Copiar memo o tag"><i class="fa-regular fa-copy"></i></button>';
+            echo '</div>';
+        }
+
         echo '</div></div></div></div>';
     }
 
@@ -162,11 +181,49 @@ function app_render_payments_section(array $payments, bool $editable = false): v
     echo '<main id="Pagos" class="tabcontent"><div class="payment-container">';
 
     foreach ($payments as $payment) {
-        $buttonClass = strtolower(str_replace(' ', '', (string) ($payment['plataforma'] ?? '')));
+        $image = app_asset_url($payment['imagen'] ?? '', ['imagen', 'uploads'], 'imagen/images.png');
+        $platform = trim((string) ($payment['plataforma'] ?? ''));
+        $link = trim((string) ($payment['enlace'] ?? ''));
+        $resolvedLink = app_resolve_external_url($link);
+        $displayValue = $link;
 
-        echo '<button type="button" class="pay-btn ' . app_e($buttonClass) . ' js-open-link" data-external-link="' . app_e($payment['enlace'] ?? '') . '">';
-        echo app_e($payment['plataforma'] ?? '');
-        echo '</button>';
+        if ($displayValue === '') {
+            $displayValue = 'Sin enlace configurado';
+        }
+
+        echo '<div class="card payment-card"><div class="card-top">';
+        echo '<img src="' . app_e($image) . '" alt="' . app_e($platform !== '' ? $platform : 'Pago online') . '">';
+        echo '<div class="card-content">';
+        echo '<h3>' . app_e($platform) . '</h3>';
+        echo '<p class="card-meta">Metodo para recibir pagos online</p>';
+        echo '</div>';
+
+        if ($editable) {
+            echo '<div class="card-menu">';
+            echo '<button type="button" class="card-menu__trigger js-card-menu" aria-label="Opciones"><i class="fa-solid fa-ellipsis-vertical"></i></button>';
+            echo '<div class="menu-dropdown">';
+            echo '<button type="button" class="danger js-delete-trigger" data-delete-id="' . (int) $payment['id'] . '" data-delete-type="pago"><i class="fa-solid fa-trash"></i> Eliminar</button>';
+            echo '</div></div>';
+        }
+
+        echo '</div>';
+        echo '<div class="gate payment-gate"><div class="gate-inner"><div class="copy-stack">';
+        echo '<div class="copy-row">';
+        echo '<span class="copy-text">' . app_e($displayValue) . '</span>';
+
+        if ($link !== '') {
+            echo '<button type="button" class="copy-btn js-copy-btn" aria-label="Copiar enlace o identificador"><i class="fa-regular fa-copy"></i></button>';
+        }
+
+        echo '</div>';
+
+        if ($resolvedLink !== '') {
+            echo '<div class="payment-actions">';
+            echo '<a href="' . app_e($resolvedLink) . '" class="payment-link-btn" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir enlace</a>';
+            echo '</div>';
+        }
+
+        echo '</div></div></div></div>';
     }
 
     if (!$payments) {

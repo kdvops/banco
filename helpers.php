@@ -50,3 +50,38 @@ function app_asset_url(?string $value, array $folders = ['uploads', 'imagen'], s
 
     return $fallback;
 }
+
+function app_resolve_external_url(?string $value): string
+{
+    $value = trim((string) $value);
+
+    if ($value === '') {
+        return '';
+    }
+
+    if (preg_match('#^https?://#i', $value)) {
+        return $value;
+    }
+
+    if (preg_match('#^//#', $value)) {
+        return 'https:' . $value;
+    }
+
+    if (preg_match('#^(mailto:|tel:)#i', $value)) {
+        return $value;
+    }
+
+    if (preg_match('/^localhost(?::\d+)?(?:[\/?#].*)?$/i', $value)) {
+        return 'http://' . $value;
+    }
+
+    if (preg_match('/^www\./i', $value)) {
+        return 'https://' . $value;
+    }
+
+    if (preg_match('/^[A-Za-z0-9.-]+\.[A-Za-z]{2,}(?::\d+)?(?:[\/?#].*)?$/', $value)) {
+        return 'https://' . $value;
+    }
+
+    return '';
+}

@@ -63,6 +63,16 @@ function app_fetch_active_crypto_assets(mysqli $conn): array
     return app_fetch_rows($conn, $sql);
 }
 
+function app_fetch_active_crypto_references(mysqli $conn): array
+{
+    $sql = "SELECT id, nombre, tipo, activo
+            FROM referencias_cripto
+            WHERE activo = 1
+            ORDER BY nombre ASC";
+
+    return app_fetch_rows($conn, $sql);
+}
+
 function app_fetch_active_payment_providers(mysqli $conn): array
 {
     $sql = "SELECT id, nombre, icono, activo
@@ -88,9 +98,10 @@ function app_fetch_profile_collections(mysqli $conn, int $userId): array
         ),
         'criptos' => app_fetch_rows(
             $conn,
-            "SELECT cw.id, cw.usuario_id, cw.cripto_activo_id, cw.direccion, ca.nombre AS moneda, ca.red, ca.icono AS imagen
+            "SELECT cw.id, cw.usuario_id, cw.cripto_activo_id, cw.referencia_cripto_id, rc.nombre AS referencia, rc.tipo AS referencia_tipo, cw.direccion, cw.memo_tag, ca.nombre AS moneda, ca.red, ca.icono AS imagen
              FROM cripto_wallets cw
              INNER JOIN cripto_activos ca ON ca.id = cw.cripto_activo_id
+             LEFT JOIN referencias_cripto rc ON rc.id = cw.referencia_cripto_id
              WHERE cw.usuario_id = {$userId}
              ORDER BY cw.id DESC"
         ),

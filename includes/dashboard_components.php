@@ -4,6 +4,7 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
 {
     $banks = $options['banks'] ?? [];
     $cryptoAssets = $options['crypto_assets'] ?? [];
+    $cryptoReferences = $options['crypto_references'] ?? [];
     $paymentProviders = $options['payment_providers'] ?? [];
     $publicHref = (string) ($options['public_href'] ?? '#');
     $shareTitle = (string) ($options['share_title'] ?? 'Perfil publico');
@@ -100,6 +101,11 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
     echo '<button type="button" class="close js-close-modal" data-modal-target="cartera">&times;</button></div>';
     echo '<form id="cryptoForm" class="modal-body modal-form">';
     echo '<input type="hidden" name="action" value="crypto">';
+    echo '<div class="modal-form-intro">';
+    echo '<p class="modal-form-kicker">Cartera cripto</p>';
+    echo '<h4>Comparte una wallet completa y sin ambiguedades</h4>';
+    echo '<p>Ademas de la direccion, algunas monedas o exchanges pueden requerir memo, tag o referencia adicional para acreditar el deposito correctamente.</p>';
+    echo '</div>';
     echo '<label>Criptomoneda</label><select name="cripto_activo_id" required>';
     echo '<option value="">Selecciona una opcion</option>';
 
@@ -109,7 +115,24 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
     }
 
     echo '</select>';
+    echo '<label>Referencia de cartera o exchange</label><select name="referencia_cripto_id">';
+    echo '<option value="">Selecciona una opcion</option>';
+
+    foreach ($cryptoReferences as $reference) {
+        $referenceLabel = trim((string) ($reference['nombre'] ?? ''));
+        $referenceType = trim((string) ($reference['tipo'] ?? ''));
+
+        if ($referenceType !== '') {
+            $referenceLabel .= ' (' . str_replace('_', ' ', $referenceType) . ')';
+        }
+
+        echo '<option value="' . (int) ($reference['id'] ?? 0) . '">' . app_e($referenceLabel) . '</option>';
+    }
+
+    echo '</select>';
     echo '<label>Direccion</label><input type="text" name="direccion" placeholder="Direccion de la cartera" required>';
+    echo '<label>Memo / Tag / Payment ID</label><input type="text" name="memo_tag" placeholder="Opcional, solo si tu wallet lo requiere">';
+    echo '<p class="modal-field-hint">Usa este campo para redes o plataformas que exigen un identificador adicional, como XRP u otras integraciones custodiales.</p>';
     echo '<button type="submit" class="submit submit--full">Guardar</button>';
     echo '</form></div></div>';
 
