@@ -202,6 +202,10 @@ function app_render_payments_section(array $payments, bool $editable = false): v
         echo '</div><div class="card-actions">';
         echo '<button type="button" class="toggle-btn js-toggle-gate" aria-label="Mostrar detalles del pago"><i class="fa-regular fa-eye"></i></button>';
 
+        if ($resolvedLink !== '') {
+            echo '<a href="' . app_e($resolvedLink) . '" class="payment-link-icon" target="_blank" rel="noopener noreferrer" aria-label="Abrir enlace en nueva pestaña"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>';
+        }
+
         if ($editable) {
             echo '<div class="card-menu">';
             echo '<button type="button" class="card-menu__trigger js-card-menu" aria-label="Opciones"><i class="fa-solid fa-ellipsis-vertical"></i></button>';
@@ -220,13 +224,6 @@ function app_render_payments_section(array $payments, bool $editable = false): v
         }
 
         echo '</div>';
-
-        if ($resolvedLink !== '') {
-            echo '<div class="payment-actions">';
-            echo '<a href="' . app_e($resolvedLink) . '" class="payment-link-btn" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir enlace</a>';
-            echo '</div>';
-        }
-
         echo '</div></div></div></div>';
     }
 

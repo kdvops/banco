@@ -511,30 +511,22 @@ body.app-page .payment-gate {
   margin-top: 14px;
 }
 
-body.app-page .payment-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-body.app-page .payment-link-btn {
+body.app-page .payment-link-icon {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #11223b 0%, #0a7cff 100%);
-  color: #fff;
-  font-weight: 700;
-  cursor: pointer;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(10, 124, 255, 0.08);
+  color: var(--app-accent);
+  text-decoration: none;
   transition: var(--app-transition);
 }
 
-body.app-page .payment-link-btn:hover {
+body.app-page .payment-link-icon:hover {
   transform: translateY(-1px);
-  box-shadow: 0 14px 24px rgba(16, 35, 60, 0.14);
+  background: rgba(10, 124, 255, 0.14);
 }
 
 body.app-page .cards > p,
