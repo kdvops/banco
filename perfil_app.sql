@@ -125,8 +125,22 @@ INSERT INTO `servicios` (`id`, `usuario_id`, `imagen`, `nombre_servicio`, `resen
 INSERT INTO `bancos` (`id`, `nombre`, `icono`, `activo`) VALUES
 (1, 'BHD', 'bhd.jpg', 1),
 (2, 'Ademi', 'ademi.png', 1),
-(3, 'Ban Reservas', 'images.png', 1),
-(4, 'Santa Cruz', 'santa cruz.png', 1);
+(3, 'Banreservas', 'images.png', 1),
+(4, 'Banco Santa Cruz', 'santa cruz.png', 1),
+(5, 'Bancamérica', 'images.png', 1),
+(6, 'Banco Activo Dominicana', 'images.png', 1),
+(7, 'Banco BDI', 'images.png', 1),
+(8, 'Banco Caribe', 'images.png', 1),
+(9, 'Banco del Progreso', 'images.png', 1),
+(10, 'Banco Lafise', 'images.png', 1),
+(11, 'Banco López de Haro', 'images.png', 1),
+(12, 'Banco Popular Dominicano', 'images.png', 1),
+(13, 'Banco Promerica', 'images.png', 1),
+(14, 'Banco Vimenca', 'images.png', 1),
+(15, 'Banesco', 'images.png', 1),
+(16, 'BellBank', 'images.png', 1),
+(17, 'Citibank', 'images.png', 1),
+(18, 'Scotiabank', 'images.png', 1);
 
 INSERT INTO `cuentas_bancarias` (`id`, `usuario_id`, `banco_id`, `tipo_cuenta`, `numero_cuenta`) VALUES
 (5, 1, 1, 'Ahorro', '11111111'),
