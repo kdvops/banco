@@ -15,6 +15,7 @@ if (!$user) {
 
 $userId = (int) $user['id'];
 $collections = app_fetch_profile_collections($conn, $userId);
+$publicHref = !empty($user['numero']) ? 'perfildecuentas.php?numero=' . rawurlencode((string) $user['numero']) : '#';
 
 app_render_page_start('Perfil de ' . ($user['nombres'] ?? 'usuario'), [
     'styles' => [
@@ -24,6 +25,16 @@ app_render_page_start('Perfil de ' . ($user['nombres'] ?? 'usuario'), [
         'styles/dashboard.css',
     ],
     'body_class' => 'app-page',
+]);
+
+app_render_site_navbar([
+    'brand' => 'Organizador de Cobro',
+    'brand_href' => 'login.php',
+    'links' => [
+        ['label' => 'Perfil Publico', 'href' => $publicHref, 'active' => true],
+        ['label' => 'Acceso', 'href' => 'login.php'],
+    ],
+    'cta' => ['label' => 'Ir al Panel', 'href' => 'login.php'],
 ]);
 
 app_render_profile_header($user, $collections['servicios'], [
@@ -38,5 +49,6 @@ app_render_profile_modal($user);
 app_render_mini_profile_modal(false);
 app_render_site_footer();
 app_render_page_end([
+    'scripts/site-nav.js',
     'scripts/profile-ui.js',
 ]);

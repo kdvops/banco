@@ -46,6 +46,49 @@ function app_render_site_footer(): void
 HTML;
 }
 
+function app_render_site_navbar(array $options = []): void
+{
+    $brand = $options['brand'] ?? 'Organizador de Cobro';
+    $links = $options['links'] ?? [];
+    $cta = $options['cta'] ?? null;
+
+    echo '<nav class="site-nav" aria-label="Principal">';
+    echo '<div class="site-nav__inner">';
+    echo '<a href="' . app_e($options['brand_href'] ?? 'index.php') . '" class="site-nav__brand">';
+    echo '<span class="site-nav__brand-mark"><i class="fa-solid fa-wallet"></i></span>';
+    echo '<span class="site-nav__brand-text">' . app_e($brand) . '</span>';
+    echo '</a>';
+
+    echo '<button type="button" class="site-nav__toggle js-nav-toggle" aria-expanded="false" aria-controls="site-nav-menu" aria-label="Abrir menu">';
+    echo '<span></span><span></span><span></span>';
+    echo '</button>';
+
+    echo '<div class="site-nav__menu" id="site-nav-menu">';
+    echo '<div class="site-nav__links">';
+
+    foreach ($links as $link) {
+        $class = 'site-nav__link';
+        if (!empty($link['active'])) {
+            $class .= ' is-active';
+        }
+
+        echo '<a class="' . app_e($class) . '" href="' . app_e($link['href'] ?? '#') . '">' . app_e($link['label'] ?? '') . '</a>';
+    }
+
+    echo '</div>';
+
+    if ($cta) {
+        $ctaClass = 'site-nav__cta';
+        if (!empty($cta['secondary'])) {
+            $ctaClass .= ' is-secondary';
+        }
+
+        echo '<a class="' . app_e($ctaClass) . '" href="' . app_e($cta['href'] ?? '#') . '">' . app_e($cta['label'] ?? '') . '</a>';
+    }
+
+    echo '</div></div></nav>';
+}
+
 function app_render_page_end(array $scripts = []): void
 {
     foreach ($scripts as $src) {

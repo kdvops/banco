@@ -11,6 +11,7 @@ if (!$user) {
 }
 
 $collections = app_fetch_profile_collections($conn, $userId);
+$publicHref = !empty($user['numero']) ? 'perfildecuentas.php?numero=' . rawurlencode((string) $user['numero']) : '#';
 
 app_render_page_start('Panel | Organizador de Metodos de Cobro', [
     'styles' => [
@@ -20,6 +21,16 @@ app_render_page_start('Panel | Organizador de Metodos de Cobro', [
         'styles/dashboard.css',
     ],
     'body_class' => 'app-page',
+]);
+
+app_render_site_navbar([
+    'brand' => 'Organizador de Cobro',
+    'brand_href' => 'index.php',
+    'links' => [
+        ['label' => 'Mi Panel', 'href' => 'index.php', 'active' => true],
+        ['label' => 'Perfil Publico', 'href' => $publicHref],
+    ],
+    'cta' => ['label' => 'Cerrar Sesion', 'href' => 'logout.php', 'secondary' => true],
 ]);
 
 app_render_profile_header($user, $collections['servicios'], [
@@ -35,6 +46,7 @@ app_render_mini_profile_modal(true);
 app_render_dashboard_management_modals($user, $collections['pagos']);
 app_render_site_footer();
 app_render_page_end([
+    'scripts/site-nav.js',
     'scripts/profile-ui.js',
     'scripts/dashboard.js',
 ]);
