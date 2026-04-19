@@ -97,19 +97,41 @@ if ($action === "perfil") {
 }
 
 if ($action === "servicio") {
+    $serviceId = (int) ($_POST['servicio_id'] ?? 0);
     $nombre = trim($_POST['nombre_servicio'] ?? '');
     $resena = trim($_POST['resena'] ?? '');
     $enlace = trim($_POST['enlace'] ?? '');
     $imagen = subirImagen('imagen', $user_id . "_");
 
-    $stmt = mysqli_prepare(
-        $conn,
-        "INSERT INTO servicios (usuario_id, nombre_servicio, resena, enlace, imagen) VALUES (?, ?, ?, ?, ?)"
-    );
-    mysqli_stmt_bind_param($stmt, "issss", $user_id, $nombre, $resena, $enlace, $imagen);
+    if ($serviceId > 0) {
+        $stmtCurrent = mysqli_prepare($conn, "SELECT imagen FROM servicios WHERE id = ? AND usuario_id = ? LIMIT 1");
+        mysqli_stmt_bind_param($stmtCurrent, "ii", $serviceId, $user_id);
+        mysqli_stmt_execute($stmtCurrent);
+        $currentResult = mysqli_stmt_get_result($stmtCurrent);
+        $currentService = $currentResult ? mysqli_fetch_assoc($currentResult) : null;
+        mysqli_stmt_close($stmtCurrent);
+
+        if (!$currentService) {
+            echo json_encode(["status" => "error", "msg" => "El servicio no existe o no te pertenece"]);
+            exit;
+        }
+
+        $serviceImage = $imagen ?? ($currentService['imagen'] ?? null);
+        $stmt = mysqli_prepare(
+            $conn,
+            "UPDATE servicios SET nombre_servicio = ?, resena = ?, enlace = ?, imagen = ? WHERE id = ? AND usuario_id = ?"
+        );
+        mysqli_stmt_bind_param($stmt, "ssssii", $nombre, $resena, $enlace, $serviceImage, $serviceId, $user_id);
+    } else {
+        $stmt = mysqli_prepare(
+            $conn,
+            "INSERT INTO servicios (usuario_id, nombre_servicio, resena, enlace, imagen) VALUES (?, ?, ?, ?, ?)"
+        );
+        mysqli_stmt_bind_param($stmt, "issss", $user_id, $nombre, $resena, $enlace, $imagen);
+    }
 
     if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(["status" => "ok", "tipo" => "servicio"]);
+        echo json_encode(["status" => "ok", "tipo" => "servicio", "mode" => $serviceId > 0 ? "update" : "create"]);
     } else {
         echo json_encode(["status" => "error", "msg" => mysqli_stmt_error($stmt)]);
     }
@@ -119,6 +141,7 @@ if ($action === "servicio") {
 }
 
 if ($action === "cuenta") {
+    $accountId = (int) ($_POST['cuenta_id'] ?? 0);
     $bancoId = (int) ($_POST['banco_id'] ?? 0);
     $tipo = $_POST['tipo'] ?? '';
     $numero = trim($_POST['numero'] ?? '');
@@ -141,14 +164,35 @@ if ($action === "cuenta") {
 
     mysqli_stmt_close($stmtBank);
 
-    $stmt = mysqli_prepare(
-        $conn,
-        "INSERT INTO cuentas_bancarias (usuario_id, banco_id, tipo_cuenta, numero_cuenta) VALUES (?, ?, ?, ?)"
-    );
-    mysqli_stmt_bind_param($stmt, "iiss", $user_id, $bancoId, $tipo, $numero);
+    if ($accountId > 0) {
+        $stmtAccount = mysqli_prepare($conn, "SELECT id FROM cuentas_bancarias WHERE id = ? AND usuario_id = ? LIMIT 1");
+        mysqli_stmt_bind_param($stmtAccount, "ii", $accountId, $user_id);
+        mysqli_stmt_execute($stmtAccount);
+        $accountResult = mysqli_stmt_get_result($stmtAccount);
+
+        if (!$accountResult || !mysqli_fetch_assoc($accountResult)) {
+            mysqli_stmt_close($stmtAccount);
+            echo json_encode(["status" => "error", "msg" => "La cuenta no existe o no te pertenece"]);
+            exit;
+        }
+
+        mysqli_stmt_close($stmtAccount);
+
+        $stmt = mysqli_prepare(
+            $conn,
+            "UPDATE cuentas_bancarias SET banco_id = ?, tipo_cuenta = ?, numero_cuenta = ? WHERE id = ? AND usuario_id = ?"
+        );
+        mysqli_stmt_bind_param($stmt, "issii", $bancoId, $tipo, $numero, $accountId, $user_id);
+    } else {
+        $stmt = mysqli_prepare(
+            $conn,
+            "INSERT INTO cuentas_bancarias (usuario_id, banco_id, tipo_cuenta, numero_cuenta) VALUES (?, ?, ?, ?)"
+        );
+        mysqli_stmt_bind_param($stmt, "iiss", $user_id, $bancoId, $tipo, $numero);
+    }
 
     if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(["status" => "ok", "tipo" => "cuenta"]);
+        echo json_encode(["status" => "ok", "tipo" => "cuenta", "mode" => $accountId > 0 ? "update" : "create"]);
     } else {
         echo json_encode(["status" => "error", "msg" => mysqli_stmt_error($stmt)]);
     }

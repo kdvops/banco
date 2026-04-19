@@ -75,14 +75,10 @@ function app_render_page_start(string $title, array $options = []): void
 
 function app_render_site_footer(): void
 {
-    $year = date('Y');
-
     echo <<<HTML
 <footer class="site-footer">
   <div class="site-footer__inner">
-    <p class="site-footer__title">Organizador de Metodos de Cobro</p>
-    <p class="site-footer__text">Comparte rapidamente donde pueden enviarte dinero, sin mezclar esa informacion entre chats y capturas.</p>
-    <p class="site-footer__meta">&copy; {$year}. Perfil publico, cuentas y billeteras en un solo lugar.</p>
+    <p class="site-footer__meta">&copy; 2026. Perfil publico, cuentas y billeteras en un solo lugar.</p>
   </div>
 </footer>
 HTML;

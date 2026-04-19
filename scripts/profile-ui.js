@@ -113,6 +113,10 @@ document.querySelectorAll(".js-mini-profile").forEach((button) => {
     modalLink.href = serviceLink;
     modalLinkContainer.style.display = serviceLink ? "block" : "none";
     modal.dataset.serviceId = button.dataset.serviceId || "";
+    modal.dataset.serviceTitle = button.dataset.serviceTitle || "";
+    modal.dataset.serviceText = button.dataset.serviceText || "";
+    modal.dataset.serviceLink = serviceLink;
+    modal.dataset.serviceImageName = button.dataset.serviceImageName || "";
 
     openModalById("modal");
   });

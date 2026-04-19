@@ -66,6 +66,7 @@ function app_render_profile_header(array $user, array $services, array $options 
                 echo ' data-service-title="' . app_e($servicio['nombre_servicio'] ?? '') . '"';
                 echo ' data-service-text="' . app_e($servicio['resena'] ?? '') . '"';
                 echo ' data-service-link="' . app_e($servicio['enlace'] ?? '') . '"';
+                echo ' data-service-image-name="' . app_e($servicio['imagen'] ?? '') . '"';
                 echo '>';
                 echo '<img src="' . app_e($serviceImage) . '" alt="' . app_e($servicio['nombre_servicio'] ?? 'Servicio') . '">';
                 echo '<span>' . app_e($servicio['nombre_servicio'] ?? '') . '</span>';
@@ -115,6 +116,7 @@ function app_render_accounts_section(array $accounts, bool $editable = false): v
             echo '<div class="card-menu">';
             echo '<button type="button" class="card-menu__trigger js-card-menu" aria-label="Opciones"><i class="fa-solid fa-ellipsis-vertical"></i></button>';
             echo '<div class="menu-dropdown">';
+            echo '<button type="button" class="js-edit-account" data-account-id="' . (int) $account['id'] . '" data-account-country-id="' . (int) ($account['pais_id'] ?? 0) . '" data-account-bank-id="' . (int) ($account['banco_id'] ?? 0) . '" data-account-type="' . app_e($account['tipo_cuenta'] ?? '') . '" data-account-number="' . app_e($account['numero_cuenta'] ?? '') . '"><i class="fa-solid fa-pen"></i> Editar</button>';
             echo '<button type="button" class="danger js-delete-trigger" data-delete-id="' . (int) $account['id'] . '" data-delete-type="cuenta"><i class="fa-solid fa-trash"></i> Eliminar</button>';
             echo '</div></div>';
         }
@@ -284,6 +286,7 @@ function app_render_mini_profile_modal(bool $editable = false): void
         echo '<div class="card-menu menu-extremo-izquierdo">';
         echo '<button type="button" class="card-menu__trigger js-card-menu" aria-label="Opciones"><i class="fa-solid fa-ellipsis-vertical"></i></button>';
         echo '<div class="menu-dropdown">';
+        echo '<button type="button" id="btnEditarServicio"><i class="fa-solid fa-pen"></i> Editar</button>';
         echo '<button type="button" class="danger" id="btnEliminarServicio"><i class="fa-solid fa-trash"></i> Eliminar</button>';
         echo '</div></div>';
         echo '<button type="button" class="close btn-cerrar-extremo js-close-modal" data-modal-target="modal">&times;</button>';

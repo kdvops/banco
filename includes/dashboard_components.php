@@ -33,26 +33,29 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
     echo '<button type="button" class="close js-close-modal" data-modal-target="servicio">&times;</button></div>';
     echo '<form id="servicioForm" class="modal-body modal-form modal-form--service" enctype="multipart/form-data">';
     echo '<input type="hidden" name="action" value="servicio">';
+    echo '<input type="hidden" name="servicio_id" value="">';
     echo '<div class="modal-form-intro">';
-    echo '<p class="modal-form-kicker">Servicio destacado</p>';
-    echo '<h4>Presenta mejor lo que ofreces</h4>';
-    echo '<p>Agrega una imagen clara, una descripcion breve y un enlace directo para que puedan conocerte y contactarte rapido.</p>';
+    echo '<p class="modal-form-kicker" id="servicioFormKicker">Servicio destacado</p>';
+    echo '<h4 id="servicioFormTitle">Presenta mejor lo que ofreces</h4>';
+    echo '<p id="servicioFormDescription">Agrega una imagen clara, una descripcion breve y un enlace directo para que puedan conocerte y contactarte rapido.</p>';
     echo '</div>';
     echo '<label>Imagen del servicio</label><input type="file" name="imagen" accept="image/*" class="service-file-input" required>';
+    echo '<p class="modal-field-hint" id="servicioImageHint">Sube una imagen representativa para mostrar mejor tu servicio.</p>';
     echo '<label>Nombre del servicio</label><input type="text" name="nombre_servicio" placeholder="Servicio o especialidad" required>';
     echo '<label>Resena</label><textarea name="resena" placeholder="Descripcion del servicio"></textarea>';
     echo '<label>Enlace</label><input type="url" name="enlace" placeholder="https://">';
-    echo '<button type="submit" class="submit submit--full">Guardar</button>';
+    echo '<button type="submit" class="submit submit--full" id="servicioSubmitBtn">Guardar</button>';
     echo '</form></div></div>';
 
     echo '<div class="modal" id="cuenta"><div class="modal-box"><div class="modal-header">Cuenta bancaria';
     echo '<button type="button" class="close js-close-modal" data-modal-target="cuenta">&times;</button></div>';
     echo '<form id="cuentaForm" class="modal-body modal-form">';
     echo '<input type="hidden" name="action" value="cuenta">';
+    echo '<input type="hidden" name="cuenta_id" value="">';
     echo '<div class="modal-form-intro">';
-    echo '<p class="modal-form-kicker">Cuenta bancaria</p>';
-    echo '<h4>Selecciona primero el pais</h4>';
-    echo '<p>Para evitar una lista demasiado larga, elige el pais y luego veras solo las entidades financieras disponibles en ese mercado.</p>';
+    echo '<p class="modal-form-kicker" id="cuentaFormKicker">Cuenta bancaria</p>';
+    echo '<h4 id="cuentaFormTitle">Selecciona primero el pais</h4>';
+    echo '<p id="cuentaFormDescription">Para evitar una lista demasiado larga, elige el pais y luego veras solo las entidades financieras disponibles en ese mercado.</p>';
     echo '</div>';
     echo '<div class="bank-cascade-group">';
     echo '<label>Pais</label><select id="bankCountrySelect" name="pais_banco" class="js-bank-country-select">';
@@ -94,7 +97,7 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
     echo '</div>';
     echo '<label>Tipo de cuenta</label><select name="tipo"><option>Ahorro</option><option>Corriente</option></select>';
     echo '<label>Numero de cuenta</label><input type="text" name="numero" placeholder="Numero de cuenta" required>';
-    echo '<button type="submit" class="submit submit--full">Guardar</button>';
+    echo '<button type="submit" class="submit submit--full" id="cuentaSubmitBtn">Guardar</button>';
     echo '</form></div></div>';
 
     echo '<div class="modal" id="cartera"><div class="modal-box"><div class="modal-header">Cartera cripto';
