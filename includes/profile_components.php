@@ -10,12 +10,6 @@ function app_render_profile_header(array $user, array $services, array $options 
 
     echo '<header class="header">';
 
-    if ($editable) {
-        echo '<button type="button" class="btn-ajustes-fijo js-settings-open" aria-label="Abrir configuracion">';
-        echo '<i class="fas fa-cog"></i>';
-        echo '</button>';
-    }
-
     echo '<button type="button" class="share-page js-share-page" title="Compartir" data-share-title="' . app_e($shareTitle) . '">';
     echo '<i class="fa-solid fa-share-nodes"></i>';
     echo '</button>';
@@ -88,7 +82,7 @@ HTML;
 
 function app_render_accounts_section(array $accounts, bool $editable = false): void
 {
-    echo '<main id="Cuentas" class="tabcontent" style="display:block;"><div class="cards">';
+    echo '<main id="Cuentas" class="tabcontent is-active"><div class="cards">';
 
     foreach ($accounts as $account) {
         $image = app_asset_url($account['imagen'] ?? '', ['imagen', 'uploads'], 'imagen/images.png');
@@ -196,9 +190,9 @@ function app_render_profile_modal(array $user): void
 <div id="profileModal" class="modal">
   <div class="modal-content">
     <button type="button" class="close js-close-modal" data-modal-target="profileModal">&times;</button>
-    <img src="{$profileImage}" width="100" style="border-radius:50%; object-fit:cover; aspect-ratio:1/1;" alt="{$fullName}">
+    <img src="{$profileImage}" class="profile-modal-avatar" alt="{$fullName}">
     <h3>{$fullName}</h3>
-    <p style="color:#666;">{$description}</p>
+    <p class="profile-modal-text">{$description}</p>
   </div>
 </div>
 HTML;
@@ -222,7 +216,7 @@ function app_render_mini_profile_modal(bool $editable = false): void
         echo '<img id="modalImg" class="img-modal-perfil" alt="Servicio">';
     } else {
         echo '<button type="button" class="close js-close-modal" data-modal-target="modal">&times;</button>';
-        echo '<img id="modalImg" width="80" style="border-radius:50%;" alt="Servicio">';
+        echo '<img id="modalImg" class="service-modal-image" alt="Servicio">';
     }
 
     echo '<h3 id="modalTitle"></h3>';

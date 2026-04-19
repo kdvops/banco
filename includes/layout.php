@@ -67,12 +67,33 @@ function app_render_site_navbar(array $options = []): void
     echo '<div class="site-nav__links">';
 
     foreach ($links as $link) {
-        $class = 'site-nav__link';
-        if (!empty($link['active'])) {
+        $isButton = !empty($link['button']);
+        $baseClass = $isButton ? 'site-nav__button' : 'site-nav__link';
+        $class = $baseClass;
+
+        if (!$isButton && !empty($link['active'])) {
             $class .= ' is-active';
         }
 
-        echo '<a class="' . app_e($class) . '" href="' . app_e($link['href'] ?? '#') . '">' . app_e($link['label'] ?? '') . '</a>';
+        if (!empty($link['class'])) {
+            $class .= ' ' . trim((string) $link['class']);
+        }
+
+        $icon = '';
+        if (!empty($link['icon'])) {
+            $icon = '<i class="' . app_e((string) $link['icon']) . '"></i>';
+        }
+
+        if ($isButton) {
+            echo '<button type="button" class="' . app_e($class) . '"';
+            if (!empty($link['aria_label'])) {
+                echo ' aria-label="' . app_e((string) $link['aria_label']) . '"';
+            }
+            echo '>' . $icon . '<span>' . app_e($link['label'] ?? '') . '</span></button>';
+            continue;
+        }
+
+        echo '<a class="' . app_e($class) . '" href="' . app_e($link['href'] ?? '#') . '">' . $icon . '<span>' . app_e($link['label'] ?? '') . '</span></a>';
     }
 
     echo '</div>';

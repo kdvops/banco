@@ -28,12 +28,12 @@ document.querySelectorAll(".js-tab-trigger").forEach((button) => {
   button.addEventListener("click", () => {
     const target = button.dataset.tabTarget;
     document.querySelectorAll(".tabcontent").forEach((tab) => {
-      tab.style.display = "none";
+      tab.classList.remove("is-active");
     });
     document.querySelectorAll(".tablink").forEach((tabButton) => {
       tabButton.classList.remove("active");
     });
-    document.getElementById(target).style.display = "block";
+    document.getElementById(target)?.classList.add("is-active");
     button.classList.add("active");
   });
 });

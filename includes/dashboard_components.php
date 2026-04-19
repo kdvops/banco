@@ -12,7 +12,7 @@ function app_render_dashboard_management_modals(array $user, array $payments): v
     echo '<label>Cedula</label><input type="text" name="cedula" class="form-control" value="' . app_e($user['cedula'] ?? '') . '">';
     echo '<label>Telefono (WhatsApp)</label><input type="text" name="numero" class="form-control" value="' . app_e($user['numero'] ?? '') . '">';
     echo '<label>Resena Personal</label><textarea name="resena_personal" class="form-control" rows="3">' . app_e($user['resena_personal'] ?? '') . '</textarea>';
-    echo '<button type="submit" class="btn btn-primary w-100">Actualizar Perfil</button>';
+    echo '<button type="submit" class="submit submit--full">Actualizar Perfil</button>';
     echo '</form></div></div>';
 
     echo '<div class="modal" id="servicio"><div class="modal-box"><div class="modal-header">Servicio';
@@ -48,25 +48,25 @@ function app_render_dashboard_management_modals(array $user, array $payments): v
 
     echo '<div class="modal" id="online"><div class="modal-box"><div class="modal-header">Pago online';
     echo '<button type="button" class="close js-close-modal" data-modal-target="online">&times;</button></div>';
-    echo '<div class="modal-body"><div id="listaPagosOnline" style="margin-bottom:20px; border-bottom:1px solid #eee; padding-bottom:15px;">';
-    echo '<p style="font-weight:bold; font-size:12px; color:#666; text-align:left;">Metodos actuales:</p>';
+    echo '<div class="modal-body"><div id="listaPagosOnline" class="payments-current-list">';
+    echo '<p class="payments-current-title">Metodos actuales:</p>';
 
     if ($payments) {
         foreach ($payments as $payment) {
-            echo '<div style="display:flex; justify-content:space-between; align-items:center; background:#f9f9f9; padding:8px 12px; border-radius:8px; margin-bottom:5px;">';
-            echo '<span style="font-size:14px; font-weight:500;">' . app_e($payment['plataforma'] ?? '') . '</span>';
-            echo '<button type="button" class="card-menu__trigger js-delete-trigger" data-delete-id="' . (int) $payment['id'] . '" data-delete-type="pago" style="background:none; color:#d9534f; padding:5px;"><i class="fa-solid fa-xmark"></i></button>';
+            echo '<div class="payment-pill">';
+            echo '<span class="payment-pill__name">' . app_e($payment['plataforma'] ?? '') . '</span>';
+            echo '<button type="button" class="card-menu__trigger payment-pill__remove js-delete-trigger" data-delete-id="' . (int) $payment['id'] . '" data-delete-type="pago" aria-label="Eliminar metodo"><i class="fa-solid fa-xmark"></i></button>';
             echo '</div>';
         }
     } else {
-        echo "<p style='font-size:12px; color:#999;'>No hay metodos guardados.</p>";
+        echo '<p class="payments-empty-note">No hay metodos guardados.</p>';
     }
 
     echo '</div><form id="plataformaForm">';
     echo '<input type="hidden" name="action" value="pago">';
     echo '<label>Plataforma</label><select name="plataforma"><option value="Zelle">Zelle</option><option value="PayPal">PayPal</option></select>';
     echo '<label>Enlace</label><input type="url" name="enlace" placeholder="https://">';
-    echo '<button type="submit" class="submit" style="width:100%;">Guardar Nuevo</button>';
+    echo '<button type="submit" class="submit submit--full">Guardar Nuevo</button>';
     echo '</form></div></div></div>';
 
     echo '<button type="button" class="search-float-btn js-open-modal" data-modal-target="searchModal"><i class="fa-solid fa-magnifying-glass"></i></button>';
@@ -74,7 +74,7 @@ function app_render_dashboard_management_modals(array $user, array $payments): v
     echo '<button type="button" class="close js-close-modal" data-modal-target="searchModal">&times;</button></div>';
     echo '<form id="searchForm" class="modal-body">';
     echo '<label>Numero telefonico</label><input type="tel" id="telefonoBusqueda" placeholder="Ej: 8091234567" required>';
-    echo '<button type="submit" class="submit">Buscar</button><div id="searchAlert" style="margin-top:15px; display:none;"></div>';
+    echo '<button type="submit" class="submit">Buscar</button><div id="searchAlert" class="search-alert"></div>';
     echo '</form></div></div>';
 
     echo '<div id="settingsModal" class="settings-overlay"><div class="settings-box"><div class="settings-header"><span>Configuracion</span>';

@@ -29,6 +29,13 @@ app_render_site_navbar([
     'links' => [
         ['label' => 'Mi Panel', 'href' => 'index.php', 'active' => true],
         ['label' => 'Perfil Publico', 'href' => $publicHref],
+        [
+            'label' => 'Configuracion',
+            'button' => true,
+            'class' => 'js-settings-open',
+            'icon' => 'fa-solid fa-gear',
+            'aria_label' => 'Abrir configuracion',
+        ],
     ],
     'cta' => ['label' => 'Cerrar Sesion', 'href' => 'logout.php', 'secondary' => true],
 ]);

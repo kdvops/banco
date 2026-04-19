@@ -10,19 +10,8 @@ app_render_page_start('Acceso | Organizador de Metodos de Cobro', [
     'body_class' => 'auth-page',
 ]);
 
-app_render_site_navbar([
-    'brand' => 'Organizador de Cobro',
-    'brand_href' => 'login.php',
-    'links' => [
-        ['label' => 'Acceso', 'href' => 'login.php', 'active' => true],
-        ['label' => 'Perfil Publico', 'href' => 'perfildecuentas.php?numero=8497071192'],
-    ],
-    'cta' => ['label' => 'Entrar', 'href' => 'login.php'],
-]);
-
 app_render_auth_shell();
 app_render_site_footer();
 app_render_page_end([
-    'scripts/site-nav.js',
     'scripts/auth.js',
 ]);

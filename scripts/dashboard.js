@@ -5,8 +5,10 @@ const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 const searchForm = document.getElementById("searchForm");
 let currentDelete = null;
 
-document.querySelector(".js-settings-open")?.addEventListener("click", () => {
-  settingsModal.style.display = "flex";
+document.querySelectorAll(".js-settings-open").forEach((trigger) => {
+  trigger.addEventListener("click", () => {
+    settingsModal.style.display = "flex";
+  });
 });
 
 document.querySelector(".js-settings-close")?.addEventListener("click", () => {
