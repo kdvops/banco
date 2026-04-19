@@ -574,6 +574,48 @@ body.app-page .modal-body {
   overflow-y: auto;
 }
 
+body.app-page .modal-form {
+  display: grid;
+  gap: 10px;
+}
+
+body.app-page .modal-form label {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: #21324a;
+}
+
+body.app-page .modal-form-intro {
+  margin-bottom: 4px;
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #f7faff 0%, #eef4fb 100%);
+  border: 1px solid rgba(225, 233, 245, 0.9);
+}
+
+body.app-page .modal-form-kicker {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--app-accent);
+}
+
+body.app-page .modal-form-intro h4 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  line-height: 1.1;
+  color: #12233d;
+}
+
+body.app-page .modal-form-intro p:last-child {
+  margin: 0;
+  color: #60708a;
+  line-height: 1.55;
+}
+
 body.app-page .close {
   position: absolute;
   top: 10px;
@@ -631,6 +673,16 @@ body.app-page select {
   box-sizing: border-box;
   font: inherit;
   color: #132238;
+}
+
+body.app-page input[type="file"] {
+  padding: 12px;
+  border-style: dashed;
+  background: linear-gradient(180deg, #f9fbfe 0%, #f1f6fd 100%);
+}
+
+body.app-page .service-file-input {
+  min-height: 58px;
 }
 
 body.app-page textarea {

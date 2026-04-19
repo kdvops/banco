@@ -14,7 +14,7 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
 
     echo '<div class="modal" id="perfil"><div class="modal-box"><div class="modal-header">Perfil';
     echo '<button type="button" class="close js-close-modal" data-modal-target="perfil">&times;</button></div>';
-    echo '<form id="perfilForm" enctype="multipart/form-data" class="modal-body">';
+    echo '<form id="perfilForm" enctype="multipart/form-data" class="modal-body modal-form">';
     echo '<input type="hidden" name="action" value="perfil">';
     echo '<label>Foto de Perfil</label><input type="file" name="foto" class="form-control">';
     echo '<label>Nombres</label><input type="text" name="nombres" class="form-control" value="' . app_e($user['nombres'] ?? '') . '" required>';
@@ -27,33 +27,38 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
 
     echo '<div class="modal" id="servicio"><div class="modal-box"><div class="modal-header">Servicio';
     echo '<button type="button" class="close js-close-modal" data-modal-target="servicio">&times;</button></div>';
-    echo '<form id="servicioForm" class="modal-body" enctype="multipart/form-data">';
+    echo '<form id="servicioForm" class="modal-body modal-form modal-form--service" enctype="multipart/form-data">';
     echo '<input type="hidden" name="action" value="servicio">';
-    echo '<label>Imagen del servicio</label><input type="file" name="imagen" accept="image/*" required>';
+    echo '<div class="modal-form-intro">';
+    echo '<p class="modal-form-kicker">Servicio destacado</p>';
+    echo '<h4>Presenta mejor lo que ofreces</h4>';
+    echo '<p>Agrega una imagen clara, una descripcion breve y un enlace directo para que puedan conocerte y contactarte rapido.</p>';
+    echo '</div>';
+    echo '<label>Imagen del servicio</label><input type="file" name="imagen" accept="image/*" class="service-file-input" required>';
     echo '<label>Nombre del servicio</label><input type="text" name="nombre_servicio" placeholder="Servicio o especialidad" required>';
     echo '<label>Resena</label><textarea name="resena" placeholder="Descripcion del servicio"></textarea>';
     echo '<label>Enlace</label><input type="url" name="enlace" placeholder="https://">';
-    echo '<button type="submit" class="submit">Guardar</button>';
+    echo '<button type="submit" class="submit submit--full">Guardar</button>';
     echo '</form></div></div>';
 
     echo '<div class="modal" id="cuenta"><div class="modal-box"><div class="modal-header">Cuenta bancaria';
     echo '<button type="button" class="close js-close-modal" data-modal-target="cuenta">&times;</button></div>';
-    echo '<form id="cuentaForm" class="modal-body">';
+    echo '<form id="cuentaForm" class="modal-body modal-form">';
     echo '<input type="hidden" name="action" value="cuenta">';
     echo '<label>Banco</label><select name="banco" required><option>BHD</option><option>Ademi</option><option>Ban Reservas</option><option>Santa Cruz</option></select>';
     echo '<label>Tipo de cuenta</label><select name="tipo"><option>Ahorro</option><option>Corriente</option></select>';
     echo '<label>Numero de cuenta</label><input type="text" name="numero" placeholder="Numero de cuenta" required>';
-    echo '<button type="submit" class="submit">Guardar</button>';
+    echo '<button type="submit" class="submit submit--full">Guardar</button>';
     echo '</form></div></div>';
 
     echo '<div class="modal" id="cartera"><div class="modal-box"><div class="modal-header">Cartera cripto';
     echo '<button type="button" class="close js-close-modal" data-modal-target="cartera">&times;</button></div>';
-    echo '<form id="cryptoForm" class="modal-body">';
+    echo '<form id="cryptoForm" class="modal-body modal-form">';
     echo '<input type="hidden" name="action" value="crypto">';
     echo '<label>Criptomoneda</label><select name="moneda"><option>BTC</option><option>ETHER</option></select>';
     echo '<label>Red</label><select name="red"><option value="BTC">BTC</option><option value="ERC20">ERC20</option><option value="TRC20">TRC20</option></select>';
     echo '<label>Direccion</label><input type="text" name="direccion" placeholder="Direccion de la cartera" required>';
-    echo '<button type="submit" class="submit">Guardar</button>';
+    echo '<button type="submit" class="submit submit--full">Guardar</button>';
     echo '</form></div></div>';
 
     echo '<div class="modal" id="online"><div class="modal-box"><div class="modal-header">Pago online';
@@ -72,7 +77,7 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
         echo '<p class="payments-empty-note">No hay metodos guardados.</p>';
     }
 
-    echo '</div><form id="plataformaForm">';
+    echo '</div><form id="plataformaForm" class="modal-form">';
     echo '<input type="hidden" name="action" value="pago">';
     echo '<label>Plataforma</label><select name="plataforma"><option value="Zelle">Zelle</option><option value="PayPal">PayPal</option></select>';
     echo '<label>Enlace</label><input type="url" name="enlace" placeholder="https://">';
@@ -82,7 +87,7 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
     echo '<button type="button" class="search-float-btn js-open-modal" data-modal-target="searchModal"><i class="fa-solid fa-magnifying-glass"></i></button>';
     echo '<div class="modal" id="searchModal"><div class="modal-box"><div class="modal-header">Buscar por telefono';
     echo '<button type="button" class="close js-close-modal" data-modal-target="searchModal">&times;</button></div>';
-    echo '<form id="searchForm" class="modal-body">';
+    echo '<form id="searchForm" class="modal-body modal-form">';
     echo '<label>Numero telefonico</label><input type="tel" id="telefonoBusqueda" placeholder="Ej: 8091234567" required>';
     echo '<button type="submit" class="submit">Buscar</button><div id="searchAlert" class="search-alert"></div>';
     echo '</form></div></div>';
