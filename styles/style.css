@@ -504,3 +504,374 @@ textarea{resize:none}
   background:#f8d7da;
   color:#721c24;
 }
+
+/* 8. CAPA VISUAL COMPARTIDA */
+body.app-page {
+  color: #1c2738;
+}
+
+body.app-page .header,
+body.app-page .tab-buttons,
+body.app-page .tabcontent,
+body.app-page .site-footer__inner {
+  width: min(1080px, calc(100% - 32px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body.app-page .header {
+  margin-top: 22px;
+  padding: 20px 20px 22px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.94) 0%, rgba(250,252,255,.92) 100%);
+  border: 1px solid rgba(255,255,255,.85);
+  border-radius: 28px;
+  box-shadow: 0 20px 55px rgba(18, 39, 73, 0.09);
+  overflow: hidden;
+}
+
+body.app-page .header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 170px;
+  background:
+    radial-gradient(circle at top right, rgba(33,150,243,.16), transparent 28%),
+    radial-gradient(circle at top left, rgba(255,193,7,.18), transparent 22%),
+    linear-gradient(180deg, rgba(239,245,255,.9), rgba(255,255,255,0));
+  pointer-events: none;
+}
+
+body.app-page .share-page {
+  top: 18px;
+  right: 18px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 10px 25px rgba(16,35,60,.12);
+  color: #0a7cff;
+  z-index: 2;
+}
+
+body.app-page .profile-hero {
+  position: relative;
+  z-index: 1;
+}
+
+body.app-page .profile-header {
+  padding: 10px 0 8px;
+}
+
+body.app-page .profile-wrapper {
+  width: 136px;
+  height: 136px;
+}
+
+body.app-page .profile-main {
+  width: 118px;
+  height: 118px;
+  border: 4px solid rgba(255,255,255,.95);
+  box-shadow: 0 16px 38px rgba(33,150,243,.18);
+}
+
+body.app-page .profile-summary {
+  max-width: 660px;
+  margin: 0 auto;
+}
+
+body.app-page .profile-eyebrow {
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #0a7cff;
+}
+
+body.app-page .profile-name {
+  margin: 0;
+  font-family: "Space Grotesk", "Manrope", sans-serif;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: #132238;
+}
+
+body.app-page .profile-id {
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: #61718a;
+  font-weight: 700;
+}
+
+body.app-page .profile-description {
+  margin: 12px auto 0;
+  max-width: 620px;
+  line-height: 1.6;
+  font-size: 15px;
+  color: #546273;
+}
+
+body.app-page .mini-profiles-block {
+  position: relative;
+  z-index: 1;
+  margin-top: 24px;
+  padding: 18px 16px 10px;
+  border-radius: 24px;
+  background: rgba(247,250,255,.88);
+  border: 1px solid rgba(225,233,245,.85);
+}
+
+body.app-page .section-heading {
+  text-align: left;
+  padding: 0 10px;
+}
+
+body.app-page .section-kicker {
+  margin: 0 0 4px;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: #0a7cff;
+}
+
+body.app-page .section-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a2940;
+}
+
+body.app-page .mini-profiles-scroll {
+  gap: 16px;
+  padding: 16px 10px 10px;
+  margin-top: 8px;
+}
+
+body.app-page .mini-profile {
+  width: 92px;
+  color: #46556c;
+  font-weight: 700;
+}
+
+body.app-page .mini-profile img,
+body.app-page .add-circle {
+  width: 68px;
+  height: 68px;
+  box-shadow: 0 10px 20px rgba(20, 48, 92, .10);
+}
+
+body.app-page .mini-profile img {
+  border: 3px solid rgba(255,255,255,.92);
+  background: #fff;
+}
+
+body.app-page .add-circle {
+  background: linear-gradient(135deg, #0a7cff 0%, #00a6fb 100%);
+}
+
+body.app-page .tab-buttons {
+  margin-top: 18px;
+  margin-bottom: 8px;
+  padding: 8px;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255,255,255,.8);
+  border: 1px solid rgba(255,255,255,.75);
+  border-radius: 20px;
+  box-shadow: 0 14px 32px rgba(18,39,73,.07);
+}
+
+body.app-page .tablink {
+  padding: 12px 18px;
+  border-radius: 14px;
+  color: #708197;
+  font-weight: 800;
+}
+
+body.app-page .tablink.active {
+  color: #11223b;
+  background: #fff;
+  border-bottom-color: transparent;
+  box-shadow: 0 12px 24px rgba(18,39,73,.08);
+}
+
+body.app-page .tabcontent {
+  padding: 14px 0 0;
+}
+
+body.app-page .cards,
+body.app-page .payment-container {
+  gap: 14px;
+}
+
+body.app-page .card {
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.86);
+  box-shadow: 0 18px 40px rgba(16,35,60,.08);
+}
+
+body.app-page .card-top {
+  gap: 12px;
+}
+
+body.app-page .card img {
+  width: 48px;
+  height: 48px;
+  margin-right: 0;
+  border: 2px solid rgba(233,239,247,.9);
+  background: #fff;
+}
+
+body.app-page .card-content {
+  flex: 1;
+}
+
+body.app-page .card-content h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #14243c;
+}
+
+body.app-page .copy-row {
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #5d6c81;
+}
+
+body.app-page .copy-text {
+  color: #11223b;
+  font-weight: 700;
+}
+
+body.app-page .copy-btn,
+body.app-page .toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(10,124,255,.08);
+  color: #0a7cff;
+}
+
+body.app-page .card-menu {
+  top: 8px;
+  right: 8px;
+}
+
+body.app-page .menu-dropdown {
+  top: 34px;
+  border: 1px solid rgba(230,236,244,.95);
+}
+
+body.app-page .gate {
+  margin-top: 14px;
+  background: linear-gradient(180deg, #f7faff 0%, #eef4fb 100%);
+  border: 1px solid rgba(225,233,245,.8);
+  border-radius: 14px;
+}
+
+body.app-page .gate-inner {
+  padding: 12px 14px;
+}
+
+body.app-page .card-add {
+  min-height: 62px;
+  border-radius: 20px;
+  border: 2px dashed rgba(10,124,255,.22);
+  background: rgba(255,255,255,.72);
+}
+
+body.app-page .payment-container {
+  align-items: stretch;
+}
+
+body.app-page .pay-btn {
+  max-width: none;
+  height: 54px;
+  border-radius: 16px;
+  box-shadow: 0 14px 24px rgba(16,35,60,.10);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: .01em;
+}
+
+body.app-page .modal-content,
+body.app-page .modal-box {
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,.85);
+  box-shadow: 0 26px 60px rgba(8,25,52,.20);
+}
+
+body.app-page .modal-header {
+  margin: 0;
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(225,233,245,.9);
+}
+
+body.app-page .modal-body {
+  padding: 18px 20px 20px;
+}
+
+body.app-page input,
+body.app-page textarea,
+body.app-page select {
+  min-height: 46px;
+  border-radius: 12px;
+  border: 1px solid rgba(204,214,228,.95);
+  background: #fbfcfe;
+}
+
+body.app-page input:focus,
+body.app-page textarea:focus,
+body.app-page select:focus {
+  outline: none;
+  border-color: rgba(10,124,255,.42);
+  box-shadow: 0 0 0 4px rgba(10,124,255,.10);
+}
+
+body.app-page .submit,
+body.app-page .modal button,
+body.app-page #modalLink {
+  font-weight: 800;
+}
+
+@media (max-width: 720px) {
+  body.app-page .header,
+  body.app-page .tab-buttons,
+  body.app-page .tabcontent,
+  body.app-page .site-footer__inner {
+    width: min(100%, calc(100% - 18px));
+  }
+
+  body.app-page .header {
+    margin-top: 12px;
+    padding: 16px 14px 18px;
+    border-radius: 22px;
+  }
+
+  body.app-page .profile-wrapper {
+    width: 122px;
+    height: 122px;
+  }
+
+  body.app-page .profile-main {
+    width: 106px;
+    height: 106px;
+  }
+
+  body.app-page .tab-buttons {
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  body.app-page .tablink {
+    white-space: nowrap;
+  }
+}

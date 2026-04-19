@@ -1,24 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+
 :root {
   --footer-bg: #10233c;
   --footer-text: rgba(255, 255, 255, 0.82);
+  --page-bg:
+    radial-gradient(circle at top left, rgba(255, 196, 87, 0.16), transparent 22%),
+    radial-gradient(circle at bottom right, rgba(33, 150, 243, 0.14), transparent 28%),
+    linear-gradient(180deg, #f6f7fb 0%, #edf2f8 100%);
+  --page-text: #1c2738;
+  --page-muted: #677489;
+  --surface-elevated: rgba(255, 255, 255, 0.88);
+  --surface-border: rgba(255, 255, 255, 0.8);
 }
 
 body {
   margin: 0;
+  color: var(--page-text);
+}
+
+body.app-page {
+  min-height: 100vh;
+  background: var(--page-bg);
+  font-family: "Manrope", "Segoe UI", Arial, sans-serif;
 }
 
 .site-footer {
-  margin-top: 28px;
+  margin-top: 36px;
   background: linear-gradient(135deg, #10233c 0%, #183554 100%);
   color: var(--footer-text);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.site-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.12), transparent 26%),
+    radial-gradient(circle at bottom left, rgba(91, 192, 190, 0.18), transparent 24%);
+  pointer-events: none;
 }
 
 .site-footer__inner {
   width: min(1080px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 28px 0 34px;
+  padding: 34px 0 38px;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .site-footer__title {
@@ -26,16 +57,17 @@ body {
   font-size: 18px;
   font-weight: 700;
   color: #fff;
+  letter-spacing: -0.02em;
 }
 
 .site-footer__text,
 .site-footer__meta {
   margin: 0;
-  line-height: 1.45;
+  line-height: 1.6;
 }
 
 .site-footer__meta {
-  margin-top: 10px;
+  margin-top: 12px;
   font-size: 13px;
   opacity: 0.8;
 }

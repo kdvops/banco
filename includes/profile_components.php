@@ -5,6 +5,8 @@ function app_render_profile_header(array $user, array $services, array $options 
     $editable = (bool) ($options['editable'] ?? false);
     $shareTitle = $options['share_title'] ?? ('Perfil de ' . ($user['nombres'] ?? 'usuario'));
     $profileImage = app_asset_url($user['imagen'] ?? 'perfil.png', ['uploads', 'imagen'], 'uploads/perfil.png');
+    $fullName = trim(($user['nombres'] ?? '') . ' ' . ($user['apellidos'] ?? ''));
+    $description = trim((string) ($user['resena_personal'] ?? ''));
 
     echo '<header class="header">';
 
@@ -18,6 +20,7 @@ function app_render_profile_header(array $user, array $services, array $options 
     echo '<i class="fa-solid fa-share-nodes"></i>';
     echo '</button>';
 
+    echo '<div class="profile-hero">';
     echo '<div class="profile-header"><div class="profile-wrapper">';
     echo '<img src="' . app_e($profileImage) . '" class="profile-main js-open-profile-modal" alt="' . app_e($user['nombres'] ?? 'Perfil') . '">';
 
@@ -28,10 +31,22 @@ function app_render_profile_header(array $user, array $services, array $options 
     }
 
     echo '</div></div>';
+    echo '<div class="profile-summary">';
+    echo '<p class="profile-eyebrow">Perfil para recibir dinero</p>';
+    echo '<h1 class="profile-name">' . app_e($fullName !== '' ? $fullName : ($user['nombres'] ?? '')) . '</h1>';
+    echo '<p class="profile-id">Cedula: ' . app_e($user['cedula'] ?? '') . '</p>';
 
-    echo '<p><strong>' . app_e($user['nombres'] ?? '') . '</strong></p>';
-    echo '<p style="color:#666;">Cedula: ' . app_e($user['cedula'] ?? '') . '</p>';
+    if ($description !== '') {
+        echo '<p class="profile-description">' . app_e($description) . '</p>';
+    }
 
+    echo '</div></div>';
+
+    echo '<section class="mini-profiles-block">';
+    echo '<div class="section-heading">';
+    echo '<p class="section-kicker">Accesos rapidos</p>';
+    echo '<h2 class="section-title">Servicios y enlaces destacados</h2>';
+    echo '</div>';
     echo '<div class="mini-profiles-scroll">';
 
     foreach ($services as $servicio) {
@@ -56,7 +71,7 @@ function app_render_profile_header(array $user, array $services, array $options 
         echo '</div>';
     }
 
-    echo '</div>';
+    echo '</div></section>';
     echo '</header>';
 }
 
