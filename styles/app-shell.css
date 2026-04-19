@@ -21,6 +21,8 @@ body {
 }
 
 body.app-page {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background: var(--page-bg);
   font-family: "Manrope", "Segoe UI", Arial, sans-serif;
@@ -189,7 +191,7 @@ body.app-page {
 }
 
 .site-footer {
-  margin-top: 36px;
+  margin-top: auto;
   background: linear-gradient(135deg, #10233c 0%, #183554 100%);
   color: var(--footer-text);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
