@@ -12,6 +12,9 @@ function app_render_page_start(string $title, array $options = []): void
     echo "<meta charset=\"UTF-8\">\n";
     echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
     echo '<title>' . app_e($title) . "</title>\n";
+    echo "<meta name=\"theme-color\" content=\"#11223b\">\n";
+    echo "<link rel=\"icon\" type=\"image/svg+xml\" href=\"favicon.svg\">\n";
+    echo "<link rel=\"shortcut icon\" href=\"favicon.svg\">\n";
 
     foreach ($styles as $href) {
         echo '<link rel="stylesheet" href="' . app_e($href) . '">' . "\n";

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#11223b"/>
+      <stop offset="1" stop-color="#0a7cff"/>
+    </linearGradient>
+    <linearGradient id="wallet" x1="18" y1="21" x2="48" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#dcecff"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="url(#bg)"/>
+  <circle cx="50" cy="16" r="6" fill="#ffd166" opacity="0.95"/>
+  <path d="M18 24.5C18 21.46 20.46 19 23.5 19H43.5C46.54 19 49 21.46 49 24.5V39.5C49 42.54 46.54 45 43.5 45H23.5C20.46 45 18 42.54 18 39.5V24.5Z" fill="url(#wallet)"/>
+  <path d="M18 28H49V38.5C49 41.54 46.54 44 43.5 44H23.5C20.46 44 18 41.54 18 38.5V28Z" fill="#f6fbff"/>
+  <path d="M41 31.5H49V37.5H41C39.34 37.5 38 36.16 38 34.5C38 32.84 39.34 31.5 41 31.5Z" fill="#0f8b8d"/>
+  <circle cx="42.8" cy="34.5" r="1.6" fill="#ffffff"/>
+  <path d="M24 25.5H39" stroke="#8bb8ff" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M24 31.5H33" stroke="#b6cfff" stroke-width="2.4" stroke-linecap="round"/>
+</svg>
