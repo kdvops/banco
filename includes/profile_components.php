@@ -29,7 +29,6 @@ function app_render_profile_header(array $user, array $services, array $options 
 
     echo '</div></div>';
     echo '<div class="profile-summary">';
-    echo '<p class="profile-eyebrow">Perfil para recibir dinero</p>';
     echo '<h1 class="profile-name">' . app_e($fullName !== '' ? $fullName : ($user['nombres'] ?? '')) . '</h1>';
     echo '<p class="profile-id">Cedula: ' . app_e($user['cedula'] ?? '') . '</p>';
 
