@@ -91,11 +91,9 @@ function app_render_accounts_section(array $accounts, bool $editable = false): v
         echo '<img src="' . app_e($image) . '" alt="' . app_e($account['banco'] ?? 'Banco') . '">';
         echo '<div class="card-content">';
         echo '<h3>' . app_e($account['banco'] ?? '') . '</h3>';
-        echo '<div class="copy-row">';
-        echo app_e($account['tipo_cuenta'] ?? '') . ' - ';
-        echo '<span class="copy-text">' . app_e($account['numero_cuenta'] ?? '') . '</span>';
-        echo '<button type="button" class="copy-btn js-copy-btn" aria-label="Copiar cuenta"><i class="fa-regular fa-copy"></i></button>';
-        echo '</div></div><div class="card-actions">';
+        echo '<p class="card-meta">' . app_e($account['tipo_cuenta'] ?? '') . '</p>';
+        echo '</div><div class="card-actions">';
+        echo '<button type="button" class="toggle-btn js-toggle-gate" aria-label="Mostrar detalles de cuenta"><i class="fa-regular fa-eye"></i></button>';
 
         if ($editable) {
             echo '<div class="card-menu">';
@@ -105,7 +103,12 @@ function app_render_accounts_section(array $accounts, bool $editable = false): v
             echo '</div></div>';
         }
 
-        echo '</div></div></div>';
+        echo '</div></div>';
+        echo '<div class="gate"><div class="gate-inner"><div class="copy-stack">';
+        echo '<div class="copy-row">';
+        echo '<span class="copy-text">' . app_e($account['numero_cuenta'] ?? '') . '</span>';
+        echo '<button type="button" class="copy-btn js-copy-btn" aria-label="Copiar cuenta"><i class="fa-regular fa-copy"></i></button>';
+        echo '</div></div></div></div></div>';
     }
 
     if (!$accounts) {
@@ -197,6 +200,7 @@ function app_render_payments_section(array $payments, bool $editable = false): v
         echo '<h3>' . app_e($platform) . '</h3>';
         echo '<p class="card-meta">Metodo para recibir pagos online</p>';
         echo '</div><div class="card-actions">';
+        echo '<button type="button" class="toggle-btn js-toggle-gate" aria-label="Mostrar detalles del pago"><i class="fa-regular fa-eye"></i></button>';
 
         if ($editable) {
             echo '<div class="card-menu">';
