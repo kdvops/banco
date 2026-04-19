@@ -520,10 +520,10 @@ body.app-page .card-menu__trigger {
   width: 34px;
   height: 34px;
   padding: 0;
-  border: none;
+  border: 1px solid rgba(226, 233, 243, 0.95);
   border-radius: 50%;
-  background: rgba(10, 124, 255, 0.08);
-  color: var(--app-accent);
+  background: rgba(244, 247, 251, 0.96);
+  color: #16263e;
   cursor: pointer;
   transition: var(--app-transition);
 }
@@ -531,8 +531,9 @@ body.app-page .card-menu__trigger {
 body.app-page .copy-btn:hover,
 body.app-page .toggle-btn:hover,
 body.app-page .card-menu__trigger:hover {
-  background: rgba(10, 124, 255, 0.14);
-  transform: translateY(-1px);
+  background: #edf2f7;
+  color: #10213a;
+  transform: none;
 }
 
 body.app-page .card-menu {
@@ -556,20 +557,27 @@ body.app-page .menu-dropdown {
 
 body.app-page .menu-dropdown button {
   width: 100%;
+  min-height: auto;
+  justify-content: flex-start;
   border: none;
   border-radius: 10px;
   background: none;
   padding: 10px 12px;
   text-align: left;
   font-size: 14px;
+  font-weight: 600;
+  color: #16263e;
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  box-shadow: none;
 }
 
 body.app-page .menu-dropdown button:hover {
   background: #f4f6f8;
+  transform: none;
+  box-shadow: none;
 }
 
 body.app-page .menu-dropdown .danger {
@@ -633,16 +641,18 @@ body.app-page .payment-link-icon {
   justify-content: center;
   width: 34px;
   height: 34px;
+  border: 1px solid rgba(226, 233, 243, 0.95);
   border-radius: 50%;
-  background: rgba(10, 124, 255, 0.08);
-  color: var(--app-accent);
+  background: rgba(244, 247, 251, 0.96);
+  color: #16263e;
   text-decoration: none;
   transition: var(--app-transition);
 }
 
 body.app-page .payment-link-icon:hover {
-  transform: translateY(-1px);
-  background: rgba(10, 124, 255, 0.14);
+  transform: none;
+  background: #edf2f7;
+  color: #10213a;
 }
 
 body.app-page .cards > p,
@@ -878,6 +888,52 @@ body.app-page .modal button:not(.close):not(.card-menu__trigger):hover,
 body.app-page #modalLink:hover {
   transform: translateY(-1px);
   box-shadow: 0 14px 24px rgba(10, 124, 255, 0.18);
+}
+
+body.app-page #modalLink {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid rgba(226, 233, 243, 0.95);
+  border-radius: 12px;
+  background: rgba(244, 247, 251, 0.96);
+  color: #16263e;
+  box-shadow: none;
+}
+
+body.app-page #modalLink:hover {
+  background: #edf2f7;
+  color: #10213a;
+  transform: none;
+  box-shadow: none;
+}
+
+body.app-page #confirmModal .modal-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+body.app-page #confirmModal #confirmText {
+  width: 100%;
+  margin: 0 0 4px;
+}
+
+body.app-page #confirmModal button:not(.close) {
+  flex: 1 1 180px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid rgba(226, 233, 243, 0.95);
+  border-radius: 12px;
+  background: rgba(244, 247, 251, 0.96);
+  color: #16263e;
+  box-shadow: none;
+}
+
+body.app-page #confirmModal button:not(.close):hover {
+  background: #edf2f7;
+  color: #10213a;
+  transform: none;
+  box-shadow: none;
 }
 
 body.app-page .submit--full {
