@@ -13,8 +13,9 @@ DROP TABLE IF EXISTS `cripto_wallets`;
 DROP TABLE IF EXISTS `cripto_activos`;
 DROP TABLE IF EXISTS `cuentas_bancarias`;
 DROP TABLE IF EXISTS `bancos`;
-DROP TABLE IF EXISTS `paises`;
 DROP TABLE IF EXISTS `pagos_online`;
+DROP TABLE IF EXISTS `proveedores_pago_online`;
+DROP TABLE IF EXISTS `paises`;
 DROP TABLE IF EXISTS `servicios`;
 DROP TABLE IF EXISTS `usuarios`;
 
@@ -117,15 +118,28 @@ CREATE TABLE `cripto_wallets` (
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `proveedores_pago_online` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `icono` varchar(200) NOT NULL DEFAULT 'images.png',
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_proveedores_pago_online_nombre` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `pagos_online` (
   `id` int NOT NULL AUTO_INCREMENT,
   `usuario_id` int NOT NULL,
-  `plataforma` varchar(100) DEFAULT NULL,
+  `proveedor_pago_online_id` int NOT NULL,
   `enlace` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_pagos_usuario_id` (`usuario_id`),
+  KEY `idx_pagos_proveedor_id` (`proveedor_pago_online_id`),
   CONSTRAINT `fk_pagos_usuario`
     FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `fk_pagos_proveedor`
+    FOREIGN KEY (`proveedor_pago_online_id`) REFERENCES `proveedores_pago_online` (`id`)
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -472,7 +486,16 @@ INSERT INTO `cripto_wallets` (`id`, `usuario_id`, `cripto_activo_id`, `direccion
 (4, 1, 2, '0xA1B2C3D4E5F6'),
 (5, 1, 1, 'bc1qexamplewallet123');
 
-INSERT INTO `pagos_online` (`id`, `usuario_id`, `plataforma`, `enlace`) VALUES
-(3, 1, 'PayPal', 'http://localhost/banco/index.php');
+INSERT INTO `proveedores_pago_online` (`id`, `nombre`, `icono`, `activo`) VALUES
+(1, 'Zelle', 'images.png', 1),
+(2, 'PayPal', 'images.png', 1),
+(3, 'Payoneer', 'images.png', 1),
+(4, 'Wise', 'images.png', 1),
+(5, 'Stripe Payment Link', 'images.png', 1),
+(6, 'Venmo', 'images.png', 1),
+(7, 'Cash App', 'images.png', 1);
+
+INSERT INTO `pagos_online` (`id`, `usuario_id`, `proveedor_pago_online_id`, `enlace`) VALUES
+(3, 1, 2, 'http://localhost/banco/index.php');
 
 SET FOREIGN_KEY_CHECKS = 1;

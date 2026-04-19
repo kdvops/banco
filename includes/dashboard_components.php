@@ -4,6 +4,7 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
 {
     $banks = $options['banks'] ?? [];
     $cryptoAssets = $options['crypto_assets'] ?? [];
+    $paymentProviders = $options['payment_providers'] ?? [];
     $publicHref = (string) ($options['public_href'] ?? '#');
     $shareTitle = (string) ($options['share_title'] ?? 'Perfil publico');
     $counts = $options['counts'] ?? [];
@@ -111,7 +112,14 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
 
     echo '</div><form id="plataformaForm" class="modal-form">';
     echo '<input type="hidden" name="action" value="pago">';
-    echo '<label>Plataforma</label><select name="plataforma"><option value="Zelle">Zelle</option><option value="PayPal">PayPal</option></select>';
+    echo '<label>Proveedor</label><select name="proveedor_pago_online_id" required>';
+    echo '<option value="">Selecciona una opcion</option>';
+
+    foreach ($paymentProviders as $provider) {
+        echo '<option value="' . (int) ($provider['id'] ?? 0) . '">' . app_e($provider['nombre'] ?? '') . '</option>';
+    }
+
+    echo '</select>';
     echo '<label>Enlace</label><input type="url" name="enlace" placeholder="https://">';
     echo '<button type="submit" class="submit submit--full">Guardar Nuevo</button>';
     echo '</form></div></div></div>';

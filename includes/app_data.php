@@ -63,6 +63,16 @@ function app_fetch_active_crypto_assets(mysqli $conn): array
     return app_fetch_rows($conn, $sql);
 }
 
+function app_fetch_active_payment_providers(mysqli $conn): array
+{
+    $sql = "SELECT id, nombre, icono, activo
+            FROM proveedores_pago_online
+            WHERE activo = 1
+            ORDER BY nombre ASC";
+
+    return app_fetch_rows($conn, $sql);
+}
+
 function app_fetch_profile_collections(mysqli $conn, int $userId): array
 {
     return [
@@ -84,6 +94,13 @@ function app_fetch_profile_collections(mysqli $conn, int $userId): array
              WHERE cw.usuario_id = {$userId}
              ORDER BY cw.id DESC"
         ),
-        'pagos' => app_fetch_rows($conn, "SELECT * FROM pagos_online WHERE usuario_id = {$userId} ORDER BY id DESC"),
+        'pagos' => app_fetch_rows(
+            $conn,
+            "SELECT po.id, po.usuario_id, po.proveedor_pago_online_id, po.enlace, ppo.nombre AS plataforma, ppo.icono AS imagen
+             FROM pagos_online po
+             INNER JOIN proveedores_pago_online ppo ON ppo.id = po.proveedor_pago_online_id
+             WHERE po.usuario_id = {$userId}
+             ORDER BY po.id DESC"
+        ),
     ];
 }

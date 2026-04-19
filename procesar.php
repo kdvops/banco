@@ -196,14 +196,32 @@ if ($action === "crypto") {
 }
 
 if ($action === "pago") {
-    $plataforma = $_POST['plataforma'] ?? '';
+    $paymentProviderId = (int) ($_POST['proveedor_pago_online_id'] ?? 0);
     $enlace = trim($_POST['enlace'] ?? '');
+
+    if ($paymentProviderId <= 0) {
+        echo json_encode(["status" => "error", "msg" => "Selecciona un proveedor valido"]);
+        exit;
+    }
+
+    $stmtProvider = mysqli_prepare($conn, "SELECT id FROM proveedores_pago_online WHERE id = ? AND activo = 1 LIMIT 1");
+    mysqli_stmt_bind_param($stmtProvider, "i", $paymentProviderId);
+    mysqli_stmt_execute($stmtProvider);
+    $providerResult = mysqli_stmt_get_result($stmtProvider);
+
+    if (!$providerResult || !mysqli_fetch_assoc($providerResult)) {
+        mysqli_stmt_close($stmtProvider);
+        echo json_encode(["status" => "error", "msg" => "El proveedor seleccionado no esta disponible"]);
+        exit;
+    }
+
+    mysqli_stmt_close($stmtProvider);
 
     $stmt = mysqli_prepare(
         $conn,
-        "INSERT INTO pagos_online (usuario_id, plataforma, enlace) VALUES (?, ?, ?)"
+        "INSERT INTO pagos_online (usuario_id, proveedor_pago_online_id, enlace) VALUES (?, ?, ?)"
     );
-    mysqli_stmt_bind_param($stmt, "iss", $user_id, $plataforma, $enlace);
+    mysqli_stmt_bind_param($stmt, "iis", $user_id, $paymentProviderId, $enlace);
 
     if (mysqli_stmt_execute($stmt)) {
         echo json_encode(["status" => "ok", "tipo" => "pago"]);
