@@ -616,6 +616,18 @@ body.app-page .modal-form-intro p:last-child {
   line-height: 1.55;
 }
 
+body.app-page .bank-cascade-group {
+  display: grid;
+  gap: 8px;
+}
+
+body.app-page .modal-field-hint {
+  margin: -4px 0 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #62738b;
+}
+
 body.app-page .close {
   position: absolute;
   top: 10px;

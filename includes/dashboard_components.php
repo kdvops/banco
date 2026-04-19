@@ -48,30 +48,49 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
     echo '<button type="button" class="close js-close-modal" data-modal-target="cuenta">&times;</button></div>';
     echo '<form id="cuentaForm" class="modal-body modal-form">';
     echo '<input type="hidden" name="action" value="cuenta">';
-    echo '<label>Banco</label><select name="banco_id" required>';
-    echo '<option value="">Selecciona un banco</option>';
-    $currentCountry = null;
+    echo '<div class="modal-form-intro">';
+    echo '<p class="modal-form-kicker">Cuenta bancaria</p>';
+    echo '<h4>Selecciona primero el pais</h4>';
+    echo '<p>Para evitar una lista demasiado larga, elige el pais y luego veras solo las entidades financieras disponibles en ese mercado.</p>';
+    echo '</div>';
+    echo '<div class="bank-cascade-group">';
+    echo '<label>Pais</label><select id="bankCountrySelect" name="pais_banco" class="js-bank-country-select">';
+    echo '<option value="">Selecciona un pais</option>';
+
+    $countryOptions = [];
+    $defaultCountryId = '';
 
     foreach ($banks as $bank) {
+        $countryId = (string) (int) ($bank['pais_id'] ?? 0);
         $countryName = trim((string) ($bank['pais_nombre'] ?? ''));
 
-        if ($countryName !== '' && $countryName !== $currentCountry) {
-            if ($currentCountry !== null) {
-                echo '</optgroup>';
+        if ($countryId !== '' && $countryId !== '0' && $countryName !== '' && !isset($countryOptions[$countryId])) {
+            $countryOptions[$countryId] = $countryName;
+
+            if (($bank['codigo_iso2'] ?? '') === 'DO') {
+                $defaultCountryId = $countryId;
             }
-
-            echo '<optgroup label="' . app_e($countryName) . '">';
-            $currentCountry = $countryName;
         }
-
-        echo '<option value="' . (int) ($bank['id'] ?? 0) . '">' . app_e($bank['nombre'] ?? '') . '</option>';
     }
 
-    if ($currentCountry !== null) {
-        echo '</optgroup>';
+    foreach ($countryOptions as $countryId => $countryName) {
+        $selectedAttr = $countryId === $defaultCountryId ? ' selected' : '';
+        echo '<option value="' . app_e($countryId) . '"' . $selectedAttr . '>' . app_e($countryName) . '</option>';
     }
 
     echo '</select>';
+    echo '<p class="modal-field-hint">Sugerencia: dejamos Republica Dominicana preseleccionada para acelerar el registro si cobras localmente.</p>';
+    echo '<label>Banco o entidad</label><select id="bankEntitySelect" name="banco_id" class="js-bank-entity-select" required disabled data-placeholder="Selecciona un banco">';
+    echo '<option value="">Selecciona un pais primero</option>';
+
+    foreach ($banks as $bank) {
+        echo '<option value="' . (int) ($bank['id'] ?? 0) . '" data-country-id="' . (int) ($bank['pais_id'] ?? 0) . '" hidden disabled>';
+        echo app_e($bank['nombre'] ?? '');
+        echo '</option>';
+    }
+
+    echo '</select>';
+    echo '</div>';
     echo '<label>Tipo de cuenta</label><select name="tipo"><option>Ahorro</option><option>Corriente</option></select>';
     echo '<label>Numero de cuenta</label><input type="text" name="numero" placeholder="Numero de cuenta" required>';
     echo '<button type="submit" class="submit submit--full">Guardar</button>';

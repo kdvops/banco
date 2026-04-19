@@ -3,6 +3,8 @@ const confirmModal = document.getElementById("confirmModal");
 const confirmText = document.getElementById("confirmText");
 const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 const searchForm = document.getElementById("searchForm");
+const bankCountrySelect = document.getElementById("bankCountrySelect");
+const bankEntitySelect = document.getElementById("bankEntitySelect");
 let currentDelete = null;
 
 document.querySelectorAll(".js-settings-open").forEach((trigger) => {
@@ -133,6 +135,33 @@ bindAjaxForm("servicioForm", true);
 bindAjaxForm("cuentaForm", false);
 bindAjaxForm("cryptoForm", false);
 bindAjaxForm("plataformaForm", false);
+
+function syncBankEntityOptions() {
+  if (!bankCountrySelect || !bankEntitySelect) {
+    return;
+  }
+
+  const selectedCountryId = bankCountrySelect.value;
+  const placeholder = bankEntitySelect.dataset.placeholder || "Selecciona un banco";
+  const emptyOption = bankEntitySelect.querySelector("option[value=\"\"]");
+
+  bankEntitySelect.value = "";
+
+  if (emptyOption) {
+    emptyOption.textContent = selectedCountryId ? placeholder : "Selecciona un pais primero";
+  }
+
+  bankEntitySelect.disabled = !selectedCountryId;
+
+  bankEntitySelect.querySelectorAll("option[data-country-id]").forEach((option) => {
+    const matchesCountry = option.dataset.countryId === selectedCountryId;
+    option.hidden = !matchesCountry;
+    option.disabled = !matchesCountry;
+  });
+}
+
+bankCountrySelect?.addEventListener("change", syncBankEntityOptions);
+syncBankEntityOptions();
 
 searchForm?.addEventListener("submit", (event) => {
   event.preventDefault();
