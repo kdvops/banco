@@ -1,6 +1,6 @@
-const CORE_CACHE = "organizador-core-v1";
-const ASSET_CACHE = "organizador-assets-v1";
-const IMAGE_CACHE = "organizador-images-v1";
+const CORE_CACHE = "organizador-core-v2";
+const ASSET_CACHE = "organizador-assets-v2";
+const IMAGE_CACHE = "organizador-images-v2";
 const OFFLINE_URL = "./offline.html";
 const CORE_ASSETS = [
   OFFLINE_URL,
@@ -8,6 +8,8 @@ const CORE_ASSETS = [
   "./favicon.svg",
   "./pwa/icon-192.png",
   "./pwa/icon-512.png",
+  "./pwa/icon-maskable-192.png",
+  "./pwa/icon-maskable-512.png",
   "./pwa/apple-touch-icon.png"
 ];
 const MAX_IMAGE_ENTRIES = 80;

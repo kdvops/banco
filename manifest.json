@@ -7,7 +7,7 @@
   "start_url": "./login.php",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#edf2f8",
+  "background_color": "#11223b",
   "theme_color": "#11223b",
   "icons": [
     {
@@ -21,6 +21,18 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "./pwa/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./pwa/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
