@@ -50,7 +50,7 @@ function app_render_page_start(string $title, array $options = []): void
     echo "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">\n";
     echo "<meta name=\"apple-mobile-web-app-status-bar-style\" content=\"default\">\n";
     echo "<meta name=\"apple-mobile-web-app-title\" content=\"Organizador\">\n";
-    echo '<link rel="manifest" href="' . app_e(app_asset_href('manifest.webmanifest')) . '">' . "\n";
+    echo '<link rel="manifest" href="' . app_e(app_asset_href('manifest.json')) . '">' . "\n";
     echo '<link rel="icon" type="image/svg+xml" href="' . app_e(app_asset_href('favicon.svg')) . '">' . "\n";
     echo '<link rel="shortcut icon" href="' . app_e(app_asset_href('favicon.svg')) . '">' . "\n";
     echo '<link rel="apple-touch-icon" href="' . app_e(app_asset_href('pwa/apple-touch-icon.png')) . '">' . "\n";

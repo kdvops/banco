@@ -4,7 +4,7 @@ const IMAGE_CACHE = "organizador-images-v1";
 const OFFLINE_URL = "./offline.html";
 const CORE_ASSETS = [
   OFFLINE_URL,
-  "./manifest.webmanifest",
+  "./manifest.json",
   "./favicon.svg",
   "./pwa/icon-192.png",
   "./pwa/icon-512.png",
@@ -103,7 +103,7 @@ async function handleImageRequest(request) {
   }
 
   try {
-    const networkResponse = await fetch(request, { credentials: "same-origin" });
+    const networkResponse = await fetch(request);
 
     if (networkResponse.ok || networkResponse.type === "opaque") {
       await cache.put(request, networkResponse.clone());
