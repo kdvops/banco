@@ -40,6 +40,7 @@ app_render_site_navbar([
 app_render_profile_header($user, $collections['servicios'], [
     'editable' => false,
     'share_title' => 'Perfil de ' . ($user['nombres'] ?? 'usuario'),
+    'share_url' => $publicHref,
 ]);
 app_render_profile_tabs();
 app_render_accounts_section($collections['cuentas'], false);

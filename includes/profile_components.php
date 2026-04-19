@@ -4,13 +4,14 @@ function app_render_profile_header(array $user, array $services, array $options 
 {
     $editable = (bool) ($options['editable'] ?? false);
     $shareTitle = $options['share_title'] ?? ('Perfil de ' . ($user['nombres'] ?? 'usuario'));
+    $shareUrl = $options['share_url'] ?? '';
     $profileImage = app_asset_url($user['imagen'] ?? 'perfil.png', ['uploads', 'imagen'], 'uploads/perfil.png');
     $fullName = trim(($user['nombres'] ?? '') . ' ' . ($user['apellidos'] ?? ''));
     $description = trim((string) ($user['resena_personal'] ?? ''));
 
     echo '<header class="header">';
 
-    echo '<button type="button" class="share-page js-share-page" title="Compartir" data-share-title="' . app_e($shareTitle) . '">';
+    echo '<button type="button" class="share-page js-share-page" title="Compartir" data-share-title="' . app_e($shareTitle) . '" data-share-url="' . app_e((string) $shareUrl) . '">';
     echo '<i class="fa-solid fa-share-nodes"></i>';
     echo '</button>';
 
