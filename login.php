@@ -1,6 +1,11 @@
 <?php
 require_once __DIR__ . '/includes/bootstrap.php';
 
+if (isset($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit();
+}
+
 app_render_page_start('Acceso | Organizador de Metodos de Cobro', [
     'styles' => [
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
