@@ -7,8 +7,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Open login.html",
-            "file": "c:\\Repositorio\\JD3\\banco\\login.html"
+            "name": "Open login.php",
+            "url": "http://localhost/banco/login.php"
         }
     ]
 }
