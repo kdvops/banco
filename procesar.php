@@ -202,6 +202,7 @@ if ($action === "cuenta") {
 }
 
 if ($action === "crypto") {
+    $cryptoId = (int) ($_POST['crypto_id'] ?? 0);
     $cryptoAssetId = (int) ($_POST['cripto_activo_id'] ?? 0);
     $cryptoReferenceId = (int) ($_POST['referencia_cripto_id'] ?? 0);
     $direccion = trim($_POST['direccion'] ?? '');
@@ -243,14 +244,35 @@ if ($action === "crypto") {
         $referenceIdForDb = $cryptoReferenceId;
     }
 
-    $stmt = mysqli_prepare(
-        $conn,
-        "INSERT INTO cripto_wallets (usuario_id, cripto_activo_id, referencia_cripto_id, direccion, memo_tag) VALUES (?, ?, ?, ?, ?)"
-    );
-    mysqli_stmt_bind_param($stmt, "iiiss", $user_id, $cryptoAssetId, $referenceIdForDb, $direccion, $memoTag);
+    if ($cryptoId > 0) {
+        $stmtWallet = mysqli_prepare($conn, "SELECT id FROM cripto_wallets WHERE id = ? AND usuario_id = ? LIMIT 1");
+        mysqli_stmt_bind_param($stmtWallet, "ii", $cryptoId, $user_id);
+        mysqli_stmt_execute($stmtWallet);
+        $walletResult = mysqli_stmt_get_result($stmtWallet);
+
+        if (!$walletResult || !mysqli_fetch_assoc($walletResult)) {
+            mysqli_stmt_close($stmtWallet);
+            echo json_encode(["status" => "error", "msg" => "La cartera no existe o no te pertenece"]);
+            exit;
+        }
+
+        mysqli_stmt_close($stmtWallet);
+
+        $stmt = mysqli_prepare(
+            $conn,
+            "UPDATE cripto_wallets SET cripto_activo_id = ?, referencia_cripto_id = ?, direccion = ?, memo_tag = ? WHERE id = ? AND usuario_id = ?"
+        );
+        mysqli_stmt_bind_param($stmt, "iissii", $cryptoAssetId, $referenceIdForDb, $direccion, $memoTag, $cryptoId, $user_id);
+    } else {
+        $stmt = mysqli_prepare(
+            $conn,
+            "INSERT INTO cripto_wallets (usuario_id, cripto_activo_id, referencia_cripto_id, direccion, memo_tag) VALUES (?, ?, ?, ?, ?)"
+        );
+        mysqli_stmt_bind_param($stmt, "iiiss", $user_id, $cryptoAssetId, $referenceIdForDb, $direccion, $memoTag);
+    }
 
     if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(["status" => "ok", "tipo" => "crypto"]);
+        echo json_encode(["status" => "ok", "tipo" => "crypto", "mode" => $cryptoId > 0 ? "update" : "create"]);
     } else {
         echo json_encode(["status" => "error", "msg" => mysqli_stmt_error($stmt)]);
     }
@@ -260,6 +282,7 @@ if ($action === "crypto") {
 }
 
 if ($action === "pago") {
+    $paymentId = (int) ($_POST['pago_id'] ?? 0);
     $paymentProviderId = (int) ($_POST['proveedor_pago_online_id'] ?? 0);
     $enlace = trim($_POST['enlace'] ?? '');
 
@@ -281,14 +304,35 @@ if ($action === "pago") {
 
     mysqli_stmt_close($stmtProvider);
 
-    $stmt = mysqli_prepare(
-        $conn,
-        "INSERT INTO pagos_online (usuario_id, proveedor_pago_online_id, enlace) VALUES (?, ?, ?)"
-    );
-    mysqli_stmt_bind_param($stmt, "iis", $user_id, $paymentProviderId, $enlace);
+    if ($paymentId > 0) {
+        $stmtPayment = mysqli_prepare($conn, "SELECT id FROM pagos_online WHERE id = ? AND usuario_id = ? LIMIT 1");
+        mysqli_stmt_bind_param($stmtPayment, "ii", $paymentId, $user_id);
+        mysqli_stmt_execute($stmtPayment);
+        $paymentResult = mysqli_stmt_get_result($stmtPayment);
+
+        if (!$paymentResult || !mysqli_fetch_assoc($paymentResult)) {
+            mysqli_stmt_close($stmtPayment);
+            echo json_encode(["status" => "error", "msg" => "El metodo de pago no existe o no te pertenece"]);
+            exit;
+        }
+
+        mysqli_stmt_close($stmtPayment);
+
+        $stmt = mysqli_prepare(
+            $conn,
+            "UPDATE pagos_online SET proveedor_pago_online_id = ?, enlace = ? WHERE id = ? AND usuario_id = ?"
+        );
+        mysqli_stmt_bind_param($stmt, "isii", $paymentProviderId, $enlace, $paymentId, $user_id);
+    } else {
+        $stmt = mysqli_prepare(
+            $conn,
+            "INSERT INTO pagos_online (usuario_id, proveedor_pago_online_id, enlace) VALUES (?, ?, ?)"
+        );
+        mysqli_stmt_bind_param($stmt, "iis", $user_id, $paymentProviderId, $enlace);
+    }
 
     if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(["status" => "ok", "tipo" => "pago"]);
+        echo json_encode(["status" => "ok", "tipo" => "pago", "mode" => $paymentId > 0 ? "update" : "create"]);
     } else {
         echo json_encode(["status" => "error", "msg" => mysqli_stmt_error($stmt)]);
     }

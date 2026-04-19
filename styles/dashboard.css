@@ -246,36 +246,35 @@
   margin-top: 16px;
 }
 
-.app-page .modal-perfil-ajustado {
-  position: relative !important;
-  padding-top: 65px !important;
-  text-align: center;
-  overflow: visible !important;
+.app-page .service-modal-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 20;
 }
 
-.app-page .menu-extremo-izquierdo {
-  position: absolute !important;
-  top: 15px !important;
-  left: 15px !important;
-  z-index: 10;
+.app-page .service-modal-toolbar .close {
+  position: static;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(244, 247, 251, 0.96);
 }
 
-.app-page .btn-cerrar-extremo {
-  position: absolute !important;
-  top: 10px !important;
-  right: 15px !important;
-  font-size: 30px !important;
-  cursor: pointer !important;
-  z-index: 10;
+.app-page .service-modal-toolbar .card-menu__trigger {
+  background: rgba(244, 247, 251, 0.96);
 }
 
-.app-page .img-modal-perfil {
-  width: 90px !important;
-  height: 90px !important;
-  border-radius: 50% !important;
-  object-fit: cover !important;
-  display: block;
-  margin: 0 auto 15px;
+.app-page .service-modal-image--editable {
+  width: 90px;
+  height: 90px;
+  margin-top: 18px;
   border: 3px solid #eee;
 }
 

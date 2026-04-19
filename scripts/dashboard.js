@@ -17,6 +17,18 @@ const cuentaTitle = document.getElementById("cuentaFormTitle");
 const cuentaDescription = document.getElementById("cuentaFormDescription");
 const cuentaKicker = document.getElementById("cuentaFormKicker");
 const cuentaSubmitBtn = document.getElementById("cuentaSubmitBtn");
+const cryptoForm = document.getElementById("cryptoForm");
+const cryptoIdInput = cryptoForm?.querySelector('input[name="crypto_id"]');
+const cryptoTitle = document.getElementById("cryptoFormTitle");
+const cryptoDescription = document.getElementById("cryptoFormDescription");
+const cryptoKicker = document.getElementById("cryptoFormKicker");
+const cryptoSubmitBtn = document.getElementById("cryptoSubmitBtn");
+const paymentForm = document.getElementById("plataformaForm");
+const paymentIdInput = paymentForm?.querySelector('input[name="pago_id"]');
+const paymentTitle = document.getElementById("paymentFormTitle");
+const paymentDescription = document.getElementById("paymentFormDescription");
+const paymentKicker = document.getElementById("paymentFormKicker");
+const paymentSubmitBtn = document.getElementById("paymentSubmitBtn");
 const bankCountrySelect = document.getElementById("bankCountrySelect");
 const bankEntitySelect = document.getElementById("bankEntitySelect");
 let currentDelete = null;
@@ -254,9 +266,75 @@ function prepareModalForCreate(targetModal) {
   if (targetModal === "cuenta") {
     resetCuentaForm();
   }
+
+  if (targetModal === "cartera") {
+    resetCryptoForm();
+  }
+
+  if (targetModal === "online") {
+    resetPaymentForm();
+  }
 }
 
-document.querySelectorAll('.js-open-modal[data-modal-target="servicio"], .js-open-modal[data-modal-target="cuenta"]').forEach((trigger) => {
+function resetCryptoForm() {
+  if (!cryptoForm) {
+    return;
+  }
+
+  cryptoForm.reset();
+  cryptoIdInput.value = "";
+  cryptoKicker.textContent = "Cartera cripto";
+  cryptoTitle.textContent = "Comparte una wallet completa y sin ambiguedades";
+  cryptoDescription.textContent = "Ademas de la direccion, algunas monedas o exchanges pueden requerir memo, tag o referencia adicional para acreditar el deposito correctamente.";
+  cryptoSubmitBtn.textContent = "Guardar";
+}
+
+function setCryptoFormForEdit(crypto) {
+  if (!cryptoForm) {
+    return;
+  }
+
+  cryptoForm.reset();
+  cryptoIdInput.value = crypto.id || "";
+  cryptoKicker.textContent = "Editar cartera cripto";
+  cryptoTitle.textContent = "Actualiza esta wallet";
+  cryptoDescription.textContent = "Puedes cambiar la moneda, la referencia, la direccion o el memo sin eliminar la cartera actual.";
+  cryptoForm.querySelector('select[name="cripto_activo_id"]').value = crypto.assetId || "";
+  cryptoForm.querySelector('select[name="referencia_cripto_id"]').value = crypto.referenceId || "";
+  cryptoForm.querySelector('input[name="direccion"]').value = crypto.address || "";
+  cryptoForm.querySelector('input[name="memo_tag"]').value = crypto.memoTag || "";
+  cryptoSubmitBtn.textContent = "Guardar cambios";
+}
+
+function resetPaymentForm() {
+  if (!paymentForm) {
+    return;
+  }
+
+  paymentForm.reset();
+  paymentIdInput.value = "";
+  paymentKicker.textContent = "Cobro online";
+  paymentTitle.textContent = "Agrega un metodo online";
+  paymentDescription.textContent = "Configura el proveedor y el enlace que usas para recibir pagos o transferencias en linea.";
+  paymentSubmitBtn.textContent = "Guardar Nuevo";
+}
+
+function setPaymentFormForEdit(payment) {
+  if (!paymentForm) {
+    return;
+  }
+
+  paymentForm.reset();
+  paymentIdInput.value = payment.id || "";
+  paymentKicker.textContent = "Editar cobro online";
+  paymentTitle.textContent = "Actualiza este metodo online";
+  paymentDescription.textContent = "Puedes cambiar el proveedor o el enlace asociado sin borrar el metodo actual.";
+  paymentForm.querySelector('select[name="proveedor_pago_online_id"]').value = payment.providerId || "";
+  paymentForm.querySelector('input[name="enlace"]').value = payment.link || "";
+  paymentSubmitBtn.textContent = "Guardar cambios";
+}
+
+document.querySelectorAll('.js-open-modal[data-modal-target="servicio"], .js-open-modal[data-modal-target="cuenta"], .js-open-modal[data-modal-target="cartera"], .js-open-modal[data-modal-target="online"]').forEach((trigger) => {
   trigger.addEventListener("click", () => {
     prepareModalForCreate(trigger.dataset.modalTarget);
   });
@@ -287,9 +365,35 @@ document.querySelectorAll(".js-edit-account").forEach((button) => {
   });
 });
 
+document.querySelectorAll(".js-edit-crypto").forEach((button) => {
+  button.addEventListener("click", () => {
+    setCryptoFormForEdit({
+      id: button.dataset.cryptoId || "",
+      assetId: button.dataset.cryptoAssetId || "",
+      referenceId: button.dataset.cryptoReferenceId || "",
+      address: button.dataset.cryptoAddress || "",
+      memoTag: button.dataset.cryptoMemoTag || ""
+    });
+    openModalById("cartera");
+  });
+});
+
+document.querySelectorAll(".js-edit-payment").forEach((button) => {
+  button.addEventListener("click", () => {
+    setPaymentFormForEdit({
+      id: button.dataset.paymentId || "",
+      providerId: button.dataset.paymentProviderId || "",
+      link: button.dataset.paymentLink || ""
+    });
+    openModalById("online");
+  });
+});
+
 bankCountrySelect?.addEventListener("change", () => syncBankEntityOptions());
 resetServicioForm();
 resetCuentaForm();
+resetCryptoForm();
+resetPaymentForm();
 
 searchForm?.addEventListener("submit", (event) => {
   event.preventDefault();

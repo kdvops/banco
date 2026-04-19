@@ -161,6 +161,7 @@ function app_render_crypto_section(array $cryptos, bool $editable = false): void
             echo '<div class="card-menu">';
             echo '<button type="button" class="card-menu__trigger js-card-menu" aria-label="Opciones"><i class="fa-solid fa-ellipsis-vertical"></i></button>';
             echo '<div class="menu-dropdown">';
+            echo '<button type="button" class="js-edit-crypto" data-crypto-id="' . (int) $crypto['id'] . '" data-crypto-asset-id="' . (int) ($crypto['cripto_activo_id'] ?? 0) . '" data-crypto-reference-id="' . (int) ($crypto['referencia_cripto_id'] ?? 0) . '" data-crypto-address="' . app_e($crypto['direccion'] ?? '') . '" data-crypto-memo-tag="' . app_e($crypto['memo_tag'] ?? '') . '"><i class="fa-solid fa-pen"></i> Editar</button>';
             echo '<button type="button" class="danger js-delete-trigger" data-delete-id="' . (int) $crypto['id'] . '" data-delete-type="crypto"><i class="fa-solid fa-trash"></i> Eliminar</button>';
             echo '</div></div>';
         }
@@ -225,6 +226,7 @@ function app_render_payments_section(array $payments, bool $editable = false): v
             echo '<div class="card-menu">';
             echo '<button type="button" class="card-menu__trigger js-card-menu" aria-label="Opciones"><i class="fa-solid fa-ellipsis-vertical"></i></button>';
             echo '<div class="menu-dropdown">';
+            echo '<button type="button" class="js-edit-payment" data-payment-id="' . (int) $payment['id'] . '" data-payment-provider-id="' . (int) ($payment['proveedor_pago_online_id'] ?? 0) . '" data-payment-link="' . app_e($payment['enlace'] ?? '') . '"><i class="fa-solid fa-pen"></i> Editar</button>';
             echo '<button type="button" class="danger js-delete-trigger" data-delete-id="' . (int) $payment['id'] . '" data-delete-type="pago"><i class="fa-solid fa-trash"></i> Eliminar</button>';
             echo '</div></div>';
         }
@@ -274,20 +276,22 @@ HTML;
 function app_render_mini_profile_modal(bool $editable = false): void
 {
     $editableAttr = app_bool_to_attr($editable);
-    $modalClass = $editable ? 'modal-content modal-perfil-ajustado' : 'modal-content';
+    $modalClass = 'modal-content';
 
     echo '<div id="modal" class="modal" data-editable="' . $editableAttr . '">';
     echo '<div class="' . $modalClass . '">';
 
     if ($editable) {
-        echo '<div class="card-menu menu-extremo-izquierdo">';
+        echo '<div class="service-modal-toolbar">';
+        echo '<div class="card-menu">';
         echo '<button type="button" class="card-menu__trigger js-card-menu" aria-label="Opciones"><i class="fa-solid fa-ellipsis-vertical"></i></button>';
         echo '<div class="menu-dropdown">';
         echo '<button type="button" id="btnEditarServicio"><i class="fa-solid fa-pen"></i> Editar</button>';
         echo '<button type="button" class="danger" id="btnEliminarServicio"><i class="fa-solid fa-trash"></i> Eliminar</button>';
         echo '</div></div>';
-        echo '<button type="button" class="close btn-cerrar-extremo js-close-modal" data-modal-target="modal">&times;</button>';
-        echo '<img id="modalImg" class="img-modal-perfil" alt="Servicio">';
+        echo '<button type="button" class="close js-close-modal" data-modal-target="modal">&times;</button>';
+        echo '</div>';
+        echo '<img id="modalImg" class="service-modal-image service-modal-image--editable" alt="Servicio">';
     } else {
         echo '<button type="button" class="close js-close-modal" data-modal-target="modal">&times;</button>';
         echo '<img id="modalImg" class="service-modal-image" alt="Servicio">';

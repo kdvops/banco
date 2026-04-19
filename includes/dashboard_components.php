@@ -104,10 +104,11 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
     echo '<button type="button" class="close js-close-modal" data-modal-target="cartera">&times;</button></div>';
     echo '<form id="cryptoForm" class="modal-body modal-form">';
     echo '<input type="hidden" name="action" value="crypto">';
+    echo '<input type="hidden" name="crypto_id" value="">';
     echo '<div class="modal-form-intro">';
-    echo '<p class="modal-form-kicker">Cartera cripto</p>';
-    echo '<h4>Comparte una wallet completa y sin ambiguedades</h4>';
-    echo '<p>Ademas de la direccion, algunas monedas o exchanges pueden requerir memo, tag o referencia adicional para acreditar el deposito correctamente.</p>';
+    echo '<p class="modal-form-kicker" id="cryptoFormKicker">Cartera cripto</p>';
+    echo '<h4 id="cryptoFormTitle">Comparte una wallet completa y sin ambiguedades</h4>';
+    echo '<p id="cryptoFormDescription">Ademas de la direccion, algunas monedas o exchanges pueden requerir memo, tag o referencia adicional para acreditar el deposito correctamente.</p>';
     echo '</div>';
     echo '<label>Criptomoneda</label><select name="cripto_activo_id" required>';
     echo '<option value="">Selecciona una opcion</option>';
@@ -136,7 +137,7 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
     echo '<label>Direccion</label><input type="text" name="direccion" placeholder="Direccion de la cartera" required>';
     echo '<label>Memo / Tag / Payment ID</label><input type="text" name="memo_tag" placeholder="Opcional, solo si tu wallet lo requiere">';
     echo '<p class="modal-field-hint">Usa este campo para redes o plataformas que exigen un identificador adicional, como XRP u otras integraciones custodiales.</p>';
-    echo '<button type="submit" class="submit submit--full">Guardar</button>';
+    echo '<button type="submit" class="submit submit--full" id="cryptoSubmitBtn">Guardar</button>';
     echo '</form></div></div>';
 
     echo '<div class="modal" id="online"><div class="modal-box"><div class="modal-header">Pago online';
@@ -157,6 +158,10 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
 
     echo '</div><form id="plataformaForm" class="modal-form">';
     echo '<input type="hidden" name="action" value="pago">';
+    echo '<input type="hidden" name="pago_id" value="">';
+    echo '<p class="modal-form-kicker" id="paymentFormKicker">Cobro online</p>';
+    echo '<h4 id="paymentFormTitle">Agrega un metodo online</h4>';
+    echo '<p id="paymentFormDescription">Configura el proveedor y el enlace que usas para recibir pagos o transferencias en linea.</p>';
     echo '<label>Proveedor</label><select name="proveedor_pago_online_id" required>';
     echo '<option value="">Selecciona una opcion</option>';
 
@@ -166,7 +171,7 @@ function app_render_dashboard_management_modals(array $user, array $payments, ar
 
     echo '</select>';
     echo '<label>Enlace</label><input type="url" name="enlace" placeholder="https://">';
-    echo '<button type="submit" class="submit submit--full">Guardar Nuevo</button>';
+    echo '<button type="submit" class="submit submit--full" id="paymentSubmitBtn">Guardar Nuevo</button>';
     echo '</form></div></div></div>';
 
     echo '<button type="button" class="search-float-btn js-open-modal" data-modal-target="searchModal"><i class="fa-solid fa-magnifying-glass"></i></button>';
