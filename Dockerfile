@@ -1,8 +1,10 @@
 # Imagen base con Apache + PHP
 FROM php:8.2-apache
 
+USER webapp
+
 # Instalar dependencias del sistema
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     git \
     curl \
@@ -21,7 +23,7 @@ RUN apt-get update && apt-get install -y \
     bcmath \
     gd \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
-
+    
 # Habilitar mod_rewrite (importante para frameworks MVC)
 RUN a2enmod rewrite
 

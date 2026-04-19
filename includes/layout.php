@@ -1,7 +1,38 @@
 <?php
 
+function app_send_no_cache_headers(): void
+{
+    if (headers_sent()) {
+        return;
+    }
+
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+}
+
+function app_asset_href(string $path): string
+{
+    if (preg_match('#^(?:https?:)?//#i', $path)) {
+        return $path;
+    }
+
+    $assetPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+    if (!is_file($assetPath)) {
+        return $path;
+    }
+
+    $version = (string) filemtime($assetPath);
+    $separator = str_contains($path, '?') ? '&' : '?';
+
+    return $path . $separator . 'v=' . rawurlencode($version);
+}
+
 function app_render_page_start(string $title, array $options = []): void
 {
+    app_send_no_cache_headers();
+
+    $description = trim((string) ($options['description'] ?? 'Organiza tus cuentas, metodos de cobro y perfiles publicos desde una sola app.'));
     $styles = $options['styles'] ?? [];
     $bodyClass = trim($options['body_class'] ?? '');
     $bodyAttributes = $options['body_attributes'] ?? [];
@@ -12,12 +43,20 @@ function app_render_page_start(string $title, array $options = []): void
     echo "<meta charset=\"UTF-8\">\n";
     echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
     echo '<title>' . app_e($title) . "</title>\n";
+    echo '<meta name="description" content="' . app_e($description) . '">' . "\n";
     echo "<meta name=\"theme-color\" content=\"#11223b\">\n";
-    echo "<link rel=\"icon\" type=\"image/svg+xml\" href=\"favicon.svg\">\n";
-    echo "<link rel=\"shortcut icon\" href=\"favicon.svg\">\n";
+    echo "<meta name=\"application-name\" content=\"Organizador de Cobro\">\n";
+    echo "<meta name=\"mobile-web-app-capable\" content=\"yes\">\n";
+    echo "<meta name=\"apple-mobile-web-app-capable\" content=\"yes\">\n";
+    echo "<meta name=\"apple-mobile-web-app-status-bar-style\" content=\"default\">\n";
+    echo "<meta name=\"apple-mobile-web-app-title\" content=\"Organizador\">\n";
+    echo '<link rel="manifest" href="' . app_e(app_asset_href('manifest.webmanifest')) . '">' . "\n";
+    echo '<link rel="icon" type="image/svg+xml" href="' . app_e(app_asset_href('favicon.svg')) . '">' . "\n";
+    echo '<link rel="shortcut icon" href="' . app_e(app_asset_href('favicon.svg')) . '">' . "\n";
+    echo '<link rel="apple-touch-icon" href="' . app_e(app_asset_href('pwa/apple-touch-icon.png')) . '">' . "\n";
 
     foreach ($styles as $href) {
-        echo '<link rel="stylesheet" href="' . app_e($href) . '">' . "\n";
+        echo '<link rel="stylesheet" href="' . app_e(app_asset_href($href)) . '">' . "\n";
     }
 
     echo "</head>\n";
@@ -115,8 +154,12 @@ function app_render_site_navbar(array $options = []): void
 
 function app_render_page_end(array $scripts = []): void
 {
+    if (!in_array('scripts/pwa.js', $scripts, true)) {
+        $scripts[] = 'scripts/pwa.js';
+    }
+
     foreach ($scripts as $src) {
-        echo "\n" . '<script src="' . app_e($src) . '"></script>';
+        echo "\n" . '<script src="' . app_e(app_asset_href($src)) . '"></script>';
     }
 
     echo "\n</body>\n</html>";

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sin conexion | Organizador</title>
+  <meta name="theme-color" content="#11223b">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg:
+        radial-gradient(circle at top left, rgba(255, 196, 87, 0.16), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(33, 150, 243, 0.16), transparent 28%),
+        linear-gradient(180deg, #f6f7fb 0%, #edf2f8 100%);
+      --surface: rgba(255, 255, 255, 0.94);
+      --border: rgba(214, 224, 236, 0.95);
+      --text: #132238;
+      --muted: #64748b;
+      --accent: #11223b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    main {
+      width: min(100%, 520px);
+      padding: 32px 28px;
+      border-radius: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: 0 22px 48px rgba(18, 39, 73, 0.12);
+      text-align: center;
+    }
+
+    .badge {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 18px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      color: #fff;
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #11223b 0%, #1f5d8b 100%);
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(28px, 6vw, 34px);
+      line-height: 1.08;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .actions {
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    a,
+    button {
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    a {
+      color: #fff;
+      background: var(--accent);
+    }
+
+    button {
+      color: var(--text);
+      background: #f4f7fb;
+      border-color: var(--border);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="badge" aria-hidden="true">OC</div>
+    <h1>Sin conexion por ahora</h1>
+    <p>La app sigue instalada, pero esta vista necesita internet para buscar datos nuevos. Las imagenes vistas recientemente pueden seguir cargando desde cache.</p>
+    <div class="actions">
+      <a href="./login.php">Ir al acceso</a>
+      <button type="button" onclick="window.location.reload()">Reintentar</button>
+    </div>
+  </main>
+</body>
+</html>
